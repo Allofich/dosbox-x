@@ -32,9 +32,12 @@
 #include "sn76496.h"
 #include <cstring>
 #include <math.h>
+#include "mame/emu.h"
+#include "mame/sn76496.h"
 
 #define MAX_OUTPUT 0x7fff
 #define STEP 0x10000
+#define SOUND_CLOCK (14318180 / 4)
 
 /* Formulas for noise generator */
 /* bit0 = output */
@@ -85,6 +88,12 @@ static struct {
 		bool irq_activated;
 	} dac;
 } tandy;
+
+static sn76496_device device_sn76496(machine_config(), 0, 0, SOUND_CLOCK);
+static ncr8496_device device_ncr8496(machine_config(), 0, 0, SOUND_CLOCK);
+static sn76496_base_device* activeDevice = &device_ncr8496;
+    
+#define device (*activeDevice)
 
 void SN76496Write(struct SN76496 *R,Bitu port,Bitu data) {
     (void)port;//UNUSED
@@ -246,15 +255,17 @@ void SN76496Update(struct SN76496 *R, Bit16s *buffer, Bitu length) {
 	}
 }
 
-static void TandySN76496Write(Bitu port,Bitu data,Bitu iolen) {
+static void TandySN76496Write(Bitu port, Bitu data, Bitu iolen) {
     (void)iolen;//UNUSED
-	struct SN76496 *R = &sn;
- 
+    struct SN76496* R = &sn;
+
 	tandy.last_write=PIC_Ticks;
 	if (!tandy.enabled) {
 		tandy.chan->Enable(true);
 		tandy.enabled=true;
 	}
+
+    //device.write(data);
 
 	// assume state change, always.
 	// this hack allows sample accurate rendering without enabling sample accurate mode in the mixer.
@@ -264,21 +275,28 @@ static void TandySN76496Write(Bitu port,Bitu data,Bitu iolen) {
 }
 
 static void TandySN76496Update(Bitu length) {
-	struct SN76496 *R = &sn;
+    struct SN76496* R = &sn;
+    //Disable the channel if it's been quiet for a while
 
 	if ((tandy.last_write+5000)<PIC_Ticks) {
 		tandy.enabled=false;
 		tandy.chan->Enable(false);
+        return;
 	}
+    const Bitu MAX_SAMPLES = 2048;
+    if (length > MAX_SAMPLES)
+        return;
+    //Bit16s buffer[MAX_SAMPLES];
+    //Bit16s* outputs = buffer;
+
+    //device_sound_interface::sound_stream stream;
+    //static_cast<device_sound_interface&>(device).sound_stream_update(stream, 0, &outputs, length);
+    
+    //tandy.chan->AddSamples_m16(length, buffer);
  
 	Bit16s * buffer=(Bit16s *)MixTemp;
-	SN76496Update(R,buffer,length);
+    SN76496Update(R, buffer, length);
 	tandy.chan->AddSamples_m16(length,(Bit16s *)MixTemp);
-}
-
-static void TandyDACWrite(Bitu port,Bitu data,Bitu iolen) {
-    (void)iolen;//UNUSED
-	LOG_MSG("Write tandy dac %X val %X",(int)port,(int)data);
 }
 
 static void SN76496_set_clock(struct SN76496 *R, int clock) {
@@ -393,6 +411,73 @@ void TandyDACModeChanged(void) {
 	}
 }
 
+static void TandyDACDMAEnabled(void) {
+	TandyDACModeChanged();
+}
+
+static void TandyDACDMADisabled(void) {
+}
+
+static void TandyDACWrite(Bitu port,Bitu data,Bitu /*iolen*/) {
+	switch (port) {
+	case 0xc4: {
+		Bitu oldmode = tandy.dac.mode;
+		tandy.dac.mode = (Bit8u)(data&0xff);
+		if ((data&3)!=(oldmode&3)) {
+			TandyDACModeChanged();
+		}
+		if (((data&0x0c)==0x0c) && ((oldmode&0x0c)!=0x0c)) {
+			TandyDACDMAEnabled();
+		} else if (((data&0x0c)!=0x0c) && ((oldmode&0x0c)==0x0c)) {
+			TandyDACDMADisabled();
+		}
+		}
+		break;
+	case 0xc5:
+		switch (tandy.dac.mode&3) {
+		case 0:
+			// joystick mode
+			break;
+		case 1:
+			tandy.dac.control = (Bit8u)(data&0xff);
+			break;
+		case 2:
+			break;
+		case 3:
+			// direct output
+			break;
+		}
+		break;
+	case 0xc6:
+		tandy.dac.frequency = (tandy.dac.frequency & 0xf00) | (Bit8u)(data & 0xff);
+		switch (tandy.dac.mode&3) {
+		case 0:
+			// joystick mode
+			break;
+		case 1:
+		case 2:
+		case 3:
+			TandyDACModeChanged();
+			break;
+		}
+		break;
+	case 0xc7:
+		tandy.dac.frequency = (tandy.dac.frequency & 0x00ff) | (((Bit8u)(data & 0xf)) << 8);
+		tandy.dac.amplitude = (Bit8u)(data>>5);
+		switch (tandy.dac.mode&3) {
+		case 0:
+			// joystick mode
+			break;
+		case 1:
+		case 2:
+		case 3:
+			TandyDACModeChanged();
+			break;
+		}
+		break;
+	}
+}
+
 static Bitu TandyDACRead(Bitu port,Bitu /*iolen*/) {
 	switch (port) {
 	case 0xc4:
@@ -453,6 +538,11 @@ public:
 		}
 
 		BIOS_tandy_D4_flag = 0;
+
+        //Select the correct tandy chip implementation
+        if (machine == MCH_PCJR) activeDevice = &device_sn76496;
+        else activeDevice = &device_ncr8496;
+
 		if (IS_TANDY_ARCH) {
 			/* enable tandy sound if tandy=true/auto */
 			if ((strcmp(section->Get_string("tandy"),"true")!=0) &&
@@ -508,7 +598,9 @@ public:
 		tandy.enabled=false;
 		BIOS_tandy_D4_flag = 0xFF;
 
-		SN76496Reset( &sn, 3579545, sample_rate );
+        ((device_t&)device).device_start();
+        device.convert_samplerate(sample_rate);
+		//SN76496Reset( &sn, 3579545, sample_rate );
 	}
 	~TANDYSOUND(){ }
 };
@@ -538,4 +630,3 @@ void TANDYSOUND_Init() {
 	AddExitFunction(AddExitFunctionFuncPair(TANDYSOUND_ShutDown),true);
 	AddVMEventFunction(VM_EVENT_RESET,AddVMEventFunctionFuncPair(TANDYSOUND_OnReset));
 }
-
