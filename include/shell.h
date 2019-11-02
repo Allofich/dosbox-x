@@ -88,7 +88,7 @@ public:
 
     /*! \brief      Program entry point, when the command is run
      */
-	void Run(void);
+	void Run(void) override;
 
     /*! \brief      Alternate execution if /C switch is given
      */

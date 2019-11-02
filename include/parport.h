@@ -37,11 +37,11 @@ public:
 	// Creates a LPT device that communicates with the num-th parallel port, i.e. is LPTnum
 	device_LPT(Bit8u num, class CParallel* pp);
 	virtual ~device_LPT();
-	bool Read(Bit8u * data,Bit16u * size);
-	bool Write(const Bit8u * data,Bit16u * size);
-	bool Seek(Bit32u * pos,Bit32u type);
-	bool Close();
-	Bit16u GetInformation(void);
+	bool Read(Bit8u * data,Bit16u * size) override;
+	bool Write(const Bit8u * data,Bit16u * size) override;
+	bool Seek(Bit32u * pos,Bit32u type) override;
+	bool Close() override;
+	Bit16u GetInformation(void) override;
 private:
 	CParallel* pportclass;
 	Bit8u num; // This device is LPTnum

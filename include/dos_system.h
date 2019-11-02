@@ -125,11 +125,11 @@ public:
 	}
 	DOS_Device():DOS_File(),devnum(0){};
 	virtual ~DOS_Device() {};
-	virtual bool	Read(Bit8u * data,Bit16u * size);
-	virtual bool	Write(const Bit8u * data,Bit16u * size);
-	virtual bool	Seek(Bit32u * pos,Bit32u type);
-	virtual bool	Close();
-	virtual Bit16u	GetInformation(void);
+	virtual bool	Read(Bit8u * data,Bit16u * size) override;
+	virtual bool	Write(const Bit8u * data,Bit16u * size) override;
+	virtual bool	Seek(Bit32u * pos,Bit32u type) override;
+	virtual bool	Close() override;
+	virtual Bit16u	GetInformation(void) override;
 	virtual bool	ReadFromControlChannel(PhysPt bufptr,Bit16u size,Bit16u * retcode);
 	virtual bool	WriteToControlChannel(PhysPt bufptr,Bit16u size,Bit16u * retcode);
 	void SetDeviceNumber(Bitu num) { devnum=num;}
@@ -140,18 +140,18 @@ private:
 class localFile : public DOS_File {
 public:
 	localFile(const char* _name, FILE * handle);
-	bool Read(Bit8u * data,Bit16u * size);
-	bool Write(const Bit8u * data,Bit16u * size);
-	bool Seek(Bit32u * pos,Bit32u type);
-	bool Close();
+	bool Read(Bit8u * data,Bit16u * size) override;
+	bool Write(const Bit8u * data,Bit16u * size) override;
+	bool Seek(Bit32u * pos,Bit32u type) override;
+	bool Close() override;
 #ifdef WIN32
-	bool LockFile(Bit8u mode, Bit32u pos, Bit16u size);
+	bool LockFile(Bit8u mode, Bit32u pos, Bit16u size) override;
 #endif
-	Bit16u GetInformation(void);
-	bool UpdateDateTimeFromHost(void);   
+	Bit16u GetInformation(void) override;
+	bool UpdateDateTimeFromHost(void) override;
 	void FlagReadOnlyMedium(void);
-	void Flush(void);
-	Bit32u GetSeekPos(void);
+	void Flush(void) override;
+	Bit32u GetSeekPos(void) override;
 private:
 	FILE * fhandle;
 	bool read_only_medium;

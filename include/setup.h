@@ -173,11 +173,11 @@ public:
 	int getMin() { return min;}
 	int getMax() { return max;}
 	void SetMinMax(Value const& min,Value const& max) {this->min = min; this->max=max;}
-	bool SetValue(std::string const& input);
+	bool SetValue(std::string const& input) override;
 	virtual ~Prop_int(){ }
-	virtual bool CheckValue(Value const& in, bool warn);
+	virtual bool CheckValue(Value const& in, bool warn) override;
 	// Override SetVal, so it takes min,max in account when there are no suggested values
-	virtual bool SetVal(Value const& in, bool forced,bool warn=true,bool init=false);
+	virtual bool SetVal(Value const& in, bool forced,bool warn=true,bool init=false) override;
 
 private:
 	Value min,max;
@@ -197,9 +197,9 @@ public:
 	double getMin() const { return min; }
 	double getMax() const { return max; }
 	void SetMinMax(Value const& min, Value const& max) { this->min = min; this->max = max; }
-	bool SetValue(std::string const& input);
+	bool SetValue(std::string const& input) override;
 	virtual ~Prop_double(){ }
-	virtual bool CheckValue(Value const& in, bool warn);
+	virtual bool CheckValue(Value const& in, bool warn) override;
 private:
 	Value min, max;
 };
@@ -210,7 +210,7 @@ public:
 		:Property(_propname,when) {
 		default_value = value = _value;
 	}
-	bool SetValue(std::string const& input);
+	bool SetValue(std::string const& input) override;
 	virtual ~Prop_bool(){ }
 };
 
@@ -220,8 +220,8 @@ public:
 		:Property(_propname,when) {
 		default_value = value = _value;
 	}
-	bool SetValue(std::string const& input);
-	virtual bool CheckValue(Value const& in, bool warn);
+	bool SetValue(std::string const& input) override;
+	virtual bool CheckValue(Value const& in, bool warn) override;
 	virtual ~Prop_string(){ }
 };
 class Prop_path:public Prop_string{
@@ -231,7 +231,7 @@ public:
 		:Prop_string(_propname,when,_value), realpath(_value) {
 		default_value = value = _value;
 	}
-	bool SetValue(std::string const& input);
+	bool SetValue(std::string const& input) override;
 	virtual ~Prop_path(){ }
 };
 
@@ -241,7 +241,7 @@ public:
 		:Property(_propname,when) {
 		default_value = value = _value;
 	}
-	bool SetValue(std::string const& input);
+	bool SetValue(std::string const& input) override;
 	virtual ~Prop_hex(){ }
 };
 
@@ -377,9 +377,9 @@ public:
 	Prop_path* Get_path(std::string const& _propname) const;
 	Prop_multival* Get_multival(std::string const& _propname) const;
 	Prop_multival_remain* Get_multivalremain(std::string const& _propname) const;
-	virtual bool HandleInputline(std::string const& gegevens);
-	virtual void PrintData(FILE* outfile,bool everything=false);
-	virtual std::string GetPropValue(std::string const& _property) const;
+	virtual bool HandleInputline(std::string const& gegevens) override;
+	virtual void PrintData(FILE* outfile,bool everything=false) override;
+	virtual std::string GetPropValue(std::string const& _property) const override;
 	virtual ~Section_prop();
 };
 
@@ -395,8 +395,8 @@ public:
 	Section_prop *GetSection() { return section; }
 	const Section_prop *GetSection() const { return section; }
 	virtual bool SetValue(std::string const& input,bool init);
-	virtual bool SetValue(std::string const& input) { return SetValue(input,/*init*/false); };
-	virtual const std::vector<Value>& GetValues() const;
+	virtual bool SetValue(std::string const& input) override { return SetValue(input,/*init*/false); };
+	virtual const std::vector<Value>& GetValues() const override;
 	virtual ~Prop_multival() { if (section != NULL) { delete section; } }
 }; //value bevat totale string. setvalue zet elk van de sub properties en checked die.
 
@@ -404,8 +404,8 @@ class Prop_multival_remain:public Prop_multival{
 public:
 	Prop_multival_remain(std::string const& _propname, Changeable::Value when,std::string const& sep):Prop_multival(_propname,when,sep){ }
 
-	virtual bool SetValue(std::string const& input,bool init);
-	virtual bool SetValue(std::string const& input) { return SetValue(input,/*init*/false); };
+	virtual bool SetValue(std::string const& input,bool init) override;
+	virtual bool SetValue(std::string const& input) override { return SetValue(input,/*init*/false); };
 };
 
 
@@ -413,9 +413,9 @@ class Section_line: public Section{
 public:
 	Section_line(std::string const& _sectionname):Section(_sectionname){}
 	virtual ~Section_line() { };
-	virtual bool HandleInputline(std::string const& line);
-	virtual void PrintData(FILE* outfile,bool everything=false);
-	virtual std::string GetPropValue(std::string const& _property) const;
+	virtual bool HandleInputline(std::string const& line) override;
+	virtual void PrintData(FILE* outfile,bool everything=false) override;
+	virtual std::string GetPropValue(std::string const& _property) const override;
 	std::string data;
 };
 
