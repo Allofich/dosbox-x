@@ -65,7 +65,7 @@ public:
 
 	virtual void sound_stream_update(sound_stream &stream, stream_sample_t **inputs, stream_sample_t **outputs, int samples) = 0;
 
-	device_sound_interface(const machine_config &mconfig, device_t& _device) {
+	device_sound_interface(const machine_config &mconfig, const device_t& _device) {
         (void)mconfig;
         (void)_device;
 	}

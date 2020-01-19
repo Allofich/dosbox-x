@@ -406,7 +406,7 @@ static Bit8u EMM_AllocateSystemHandle(Bit16u pages/*NTS: EMS pages are 16KB, thi
 	return EMM_NO_ERROR;
 }
 
-static Bit8u EMM_ReallocatePages(Bit16u handle,Bit16u & pages) {
+static Bit8u EMM_ReallocatePages(Bit16u handle, const Bit16u & pages) {
 	/* Check for valid handle */
 	if (!ValidHandle(handle)) return EMM_INVALID_HANDLE;
 	if (emm_handles[handle].pages != 0) {

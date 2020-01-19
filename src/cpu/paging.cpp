@@ -226,7 +226,7 @@ static const Bit8u fault_table[] = {
 static inline PhysPt GetPageDirectoryEntryAddr(PhysPt lin_addr) {
 	return paging.base.addr | ((lin_addr >> 22u) << 2u);
 }
-static inline PhysPt GetPageTableEntryAddr(PhysPt lin_addr, X86PageEntry& dir_entry) {
+static inline PhysPt GetPageTableEntryAddr(PhysPt lin_addr, const X86PageEntry& dir_entry) {
 	return ((PhysPt)dir_entry.block.base << (PhysPt)12U) | ((lin_addr >> 10U) & 0xffcu);
 }
 /*

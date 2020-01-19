@@ -2061,7 +2061,7 @@ static void MakeTables(void) {
 		((double)pantable[15]) / (1 << RAMP_FRACT));
 }
 
-static IO_ReadHandler* gus_cb_port_r(IO_CalloutObject &co,Bitu port,Bitu iolen) {
+static IO_ReadHandler* gus_cb_port_r(const IO_CalloutObject &co,Bitu port,Bitu iolen) {
     (void)co;
     (void)iolen;
 
@@ -2077,7 +2077,7 @@ static IO_ReadHandler* gus_cb_port_r(IO_CalloutObject &co,Bitu port,Bitu iolen) 
     return read_gus;
 }
 
-static IO_WriteHandler* gus_cb_port_w(IO_CalloutObject &co,Bitu port,Bitu iolen) {
+static IO_WriteHandler* gus_cb_port_w(const IO_CalloutObject &co,Bitu port,Bitu iolen) {
     (void)co;
     (void)iolen;
 

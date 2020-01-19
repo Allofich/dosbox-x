@@ -37,7 +37,7 @@ class MEM_CalloutObject;
 
 class PageDirectory;
 
-typedef PageHandler* (MEM_CalloutHandler)(MEM_CalloutObject &co,Bitu phys_page);
+typedef PageHandler* (MEM_CalloutHandler)(const MEM_CalloutObject &co,Bitu phys_page);
 
 void MEM_RegisterHandler(Bitu phys_page,PageHandler *handler,Bitu page_range=1);
 

@@ -1789,7 +1789,7 @@ void MenuDrawText(int x,int y,const char *text,Bitu color) {
 #endif
 }
 
-void DOSBoxMenu::item::drawMenuItem(DOSBoxMenu &menu) {
+void DOSBoxMenu::item::drawMenuItem(const DOSBoxMenu &menu) {
     (void)menu;//UNUSED
 
     Bitu bgcolor = GFX_GetRGB(63, 63, 63);
@@ -3745,7 +3745,7 @@ DOSBoxMenu::item_handle_t DOSBoxMenu::displaylist::itemFromPoint(DOSBoxMenu &men
     return unassigned_item_handle;
 }
 
-void DOSBoxMenu::item::updateScreenFromItem(DOSBoxMenu &menu) {
+void DOSBoxMenu::item::updateScreenFromItem(const DOSBoxMenu &menu) {
     (void)menu;//UNUSED
     if (!OpenGL_using()) {
         SDL_Rect uprect = screenBox;
@@ -3760,7 +3760,7 @@ void DOSBoxMenu::item::updateScreenFromItem(DOSBoxMenu &menu) {
     }
 }
 
-void DOSBoxMenu::item::updateScreenFromPopup(DOSBoxMenu &menu) {
+void DOSBoxMenu::item::updateScreenFromPopup(const DOSBoxMenu &menu) {
     (void)menu;//UNUSED
     if (!OpenGL_using()) {
         SDL_Rect uprect = popupBox;
@@ -3777,7 +3777,7 @@ void DOSBoxMenu::item::updateScreenFromPopup(DOSBoxMenu &menu) {
     }
 }
 
-void DOSBoxMenu::item::drawBackground(DOSBoxMenu &menu) {
+void DOSBoxMenu::item::drawBackground(const DOSBoxMenu &menu) {
     (void)menu;//UNUSED
     Bitu bordercolor = GFX_GetRGB(31, 31, 31);
     Bitu bgcolor = GFX_GetRGB(63, 63, 63);
@@ -3805,7 +3805,7 @@ void DOSBoxMenu::item::drawBackground(DOSBoxMenu &menu) {
 #endif
 
 #if DOSBOXMENU_TYPE == DOSBOXMENU_SDLDRAW /* SDL drawn menus */
-void GFX_SDLMenuTrackHover(DOSBoxMenu &menu,DOSBoxMenu::item_handle_t item_id) {
+void GFX_SDLMenuTrackHover(const DOSBoxMenu &menu,DOSBoxMenu::item_handle_t item_id) {
     (void)menu;//UNUSED
     if (mainMenu.menuUserHoverAt != item_id) {
         if (mainMenu.menuUserHoverAt != DOSBoxMenu::unassigned_item_handle) {
@@ -3833,7 +3833,7 @@ void GFX_SDLMenuTrackHover(DOSBoxMenu &menu,DOSBoxMenu::item_handle_t item_id) {
     }
 }
 
-void GFX_SDLMenuTrackHilight(DOSBoxMenu &menu,DOSBoxMenu::item_handle_t item_id) {
+void GFX_SDLMenuTrackHilight(const DOSBoxMenu &menu,DOSBoxMenu::item_handle_t item_id) {
     (void)menu;//UNUSED
     if (mainMenu.menuUserAttentionAt != item_id) {
         if (mainMenu.menuUserAttentionAt != DOSBoxMenu::unassigned_item_handle) {
@@ -4617,7 +4617,7 @@ bool GFX_IsFullscreen(void) {
     return sdl.desktop.fullscreen;
 }
 
-void* GetSetSDLValue(int isget, std::string& target, void* setval) {
+void* GetSetSDLValue(int isget, const std::string& target, void* setval) {
     if (target == "wait_on_error") {
         if (isget) return (void*) sdl.wait_on_error;
         else sdl.wait_on_error = setval;
@@ -8744,7 +8744,7 @@ bool OpenGL_using(void) {
 #endif
 }
 
-bool Get_Custom_SaveDir(std::string& savedir) {
+bool Get_Custom_SaveDir(const std::string& savedir) {
     (void)savedir;//UNUSED
     if (custom_savedir.length() != 0)
         return true;
