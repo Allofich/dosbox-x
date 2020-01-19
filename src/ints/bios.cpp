@@ -881,7 +881,7 @@ static IO_ReadHandler* const dosbox_integration_cb_ports_r[4] = {
     NULL
 };
 
-static IO_ReadHandler* dosbox_integration_cb_port_r(IO_CalloutObject &co,Bitu port,Bitu iolen) {
+static IO_ReadHandler* dosbox_integration_cb_port_r(const IO_CalloutObject &co,Bitu port,Bitu iolen) {
     (void)co;
     (void)iolen;
     return dosbox_integration_cb_ports_r[port&3];
@@ -894,7 +894,7 @@ static IO_WriteHandler* const dosbox_integration_cb_ports_w[4] = {
     NULL
 };
 
-static IO_WriteHandler* dosbox_integration_cb_port_w(IO_CalloutObject &co,Bitu port,Bitu iolen) {
+static IO_WriteHandler* dosbox_integration_cb_port_w(const IO_CalloutObject &co,Bitu port,Bitu iolen) {
     (void)co;
     (void)iolen;
     return dosbox_integration_cb_ports_w[port&3];
@@ -2921,7 +2921,7 @@ void PC98_InitDefFuncRow(void) {
 
 #include "int10.h"
 
-void draw_pc98_function_row_elem(unsigned int o,unsigned int co,struct pc98_func_key_shortcut_def &key) {
+void draw_pc98_function_row_elem(unsigned int o,unsigned int co,const struct pc98_func_key_shortcut_def &key) {
     const unsigned char *str = key.shortcut;
     unsigned int j = 0,i = 0;
 

@@ -603,7 +603,7 @@ bool CDROM_Interface_Image::HasDataTrack(void)
 }
 
 
-bool CDROM_Interface_Image::GetRealFileName(string &filename, string &pathname)
+bool CDROM_Interface_Image::GetRealFileName(string &filename, const string &pathname)
 {
 	// check if file exists
 	struct stat test;

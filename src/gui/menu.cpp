@@ -1280,7 +1280,7 @@ void SetVal(const std::string& secname, const std::string& preval, const std::st
     }
 }
 
-void DOSBox_SetMenu(DOSBoxMenu &altMenu) {
+void DOSBox_SetMenu(const DOSBoxMenu &altMenu) {
 #if DOSBOXMENU_TYPE == DOSBOXMENU_SDLDRAW
     /* nothing to do */
     (void)altMenu;

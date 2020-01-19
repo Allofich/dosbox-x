@@ -218,7 +218,7 @@ PageHandler &Get_ROM_page_handler(void) {
 
 extern bool pcibus_enable;
 
-template <enum MEM_Type_t iotype> static unsigned int MEM_Gen_Callout(Bitu &ret,PageHandler* &f,Bitu page) {
+template <enum MEM_Type_t iotype> static unsigned int MEM_Gen_Callout(const Bitu &ret,PageHandler* &f,Bitu page) {
     MEM_callout_vector &vec = MEM_callouts[iotype - MEM_TYPE_MIN];
     unsigned int match = 0;
     PageHandler *t_f;
@@ -252,15 +252,15 @@ template <enum MEM_Type_t iotype> static unsigned int MEM_Gen_Callout(Bitu &ret,
     return match;
 }
 
-static unsigned int MEM_Motherboard_Callout(Bitu &ret,PageHandler* &f,Bitu page) {
+static unsigned int MEM_Motherboard_Callout(const Bitu &ret,PageHandler* &f,Bitu page) {
     return MEM_Gen_Callout<MEM_TYPE_MB>(ret,f,page);
 }
 
-static unsigned int MEM_PCI_Callout(Bitu &ret,PageHandler* &f,Bitu page) {
+static unsigned int MEM_PCI_Callout(const Bitu &ret,PageHandler* &f,Bitu page) {
     return MEM_Gen_Callout<MEM_TYPE_PCI>(ret,f,page);
 }
 
-static unsigned int MEM_ISA_Callout(Bitu &ret,PageHandler* &f,Bitu page) {
+static unsigned int MEM_ISA_Callout(const Bitu &ret,PageHandler* &f,Bitu page) {
     return MEM_Gen_Callout<MEM_TYPE_ISA>(ret,f,page);
 }
 
@@ -539,7 +539,7 @@ void lfb_mem_cb_free(void) {
     }
 }
 
-PageHandler* lfb_memio_cb(MEM_CalloutObject &co,Bitu phys_page) {
+PageHandler* lfb_memio_cb(const MEM_CalloutObject &co,Bitu phys_page) {
     (void)co;//UNUSED
     if (memory.lfb.start_page == 0 || memory.lfb.pages == 0)
         return NULL;

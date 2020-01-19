@@ -260,7 +260,7 @@ void                INT10_Init(Section*);
 void                PRINTER_Init(Section*);
 #endif
 
-signed long long time_to_clockdom(ClockDomain &src,double t) {
+signed long long time_to_clockdom(const ClockDomain &src,double t) {
     signed long long lt = (signed long long)t;
 
     lt *= (signed long long)src.freq;

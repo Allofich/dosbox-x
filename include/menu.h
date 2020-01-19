@@ -43,7 +43,7 @@ void MountDrive_2(char drive, const char drive2[DOS_PATHLENGTH], std::string dri
 void MENU_Check_Drive(HMENU handle, int cdrom, int floppy, int local, int image, int automount, int umount, char drive);
 bool MENU_SetBool(std::string secname, std::string value);
 void MENU_swapstereo(bool enabled);
-void* GetSetSDLValue(int isget, std::string& target, void* setval);
+void* GetSetSDLValue(int isget, const std::string& target, void* setval);
 void GFX_SetTitle(Bit32s cycles, Bits frameskip, Bits timing, bool paused);
 void change_output(int output);
 void res_input(bool type, const char * res);
@@ -518,7 +518,7 @@ class DOSBoxMenu {
 
 extern DOSBoxMenu mainMenu;
 
-void DOSBox_SetMenu(DOSBoxMenu &altMenu);
+void DOSBox_SetMenu(const DOSBoxMenu &altMenu);
 
 #endif /* MENU_DOSBOXMENU_H */
 

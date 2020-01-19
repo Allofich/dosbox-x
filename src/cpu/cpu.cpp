@@ -3075,7 +3075,7 @@ void Weitek_PageHandler::writed(PhysPt addr,Bit32u val) {
 
 Weitek_PageHandler weitek_pagehandler(0);
 
-PageHandler* weitek_memio_cb(MEM_CalloutObject &co,Bitu phys_page) {
+PageHandler* weitek_memio_cb(const MEM_CalloutObject &co,Bitu phys_page) {
     (void)co; // UNUSED
     (void)phys_page; // UNUSED
     return &weitek_pagehandler;

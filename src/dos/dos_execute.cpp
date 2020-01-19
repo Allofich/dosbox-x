@@ -268,7 +268,7 @@ static void SetupPSP(Bit16u pspseg,Bit16u memsize,Bit16u envseg) {
 
 }
 
-static void SetupCMDLine(Bit16u pspseg,DOS_ParamBlock & block) {
+static void SetupCMDLine(Bit16u pspseg, const DOS_ParamBlock & block) {
 	DOS_PSP psp(pspseg);
 	// if cmdtail==0 it will inited as empty in SetCommandTail
 	psp.SetCommandTail(block.exec.cmdtail);
