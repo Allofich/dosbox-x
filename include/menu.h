@@ -252,7 +252,7 @@ class DOSBoxMenu {
             public:
                 void                    removeFocus(DOSBoxMenu &menu);
                 void                    removeHover(DOSBoxMenu &menu);
-                void                    drawMenuItem(DOSBoxMenu &menu);
+                void                    drawMenuItem(const DOSBoxMenu &menu);
                 void                    showItem(DOSBoxMenu &menu,bool show=true);
                 item&                   setHover(DOSBoxMenu &menu,bool ho=true);
                 item&                   setHilight(DOSBoxMenu &menu,bool hi=true);
