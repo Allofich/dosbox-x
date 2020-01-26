@@ -1,0 +1,13 @@
+language: cpp
+
+matrix:
+  include:
+    - os: linux
+    - os: osx
+
+before_install:
+  - eval "${MATRIX_EVAL}"
+
+script:
+  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then ./build-macosx; fi
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then ./build-debug-no-avcodec; fi
