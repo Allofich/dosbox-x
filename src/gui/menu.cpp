@@ -688,7 +688,7 @@ DOSBoxMenu::item &DOSBoxMenu::item::allocate(const item_handle_t id,const enum i
     if (master_id != unassigned_item_handle || status.allocated)
         E_Exit("DOSBoxMenu::item::allocate() called on item already allocated");
 
-    status.allocated = 1;
+    status.allocated = true;
     name = new_name;
     type = new_type;
     master_id = id;
@@ -700,8 +700,8 @@ void DOSBoxMenu::item::deallocate(void) {
         E_Exit("DOSBoxMenu::item::deallocate() called on item already deallocated");
 
     master_id = unassigned_item_handle;
-    status.allocated = 0;
-    status.changed = 1;
+    status.allocated = false;
+    status.changed = true;
     shortcut_text.clear();
     description.clear();
     text.clear();

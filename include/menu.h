@@ -207,11 +207,11 @@ class DOSBoxMenu {
                                                    enabled(true), checked(false),
                                                    in_use(false) { };
 
-                    unsigned int        changed:1;
-                    unsigned int        allocated:1;
-                    unsigned int        enabled:1;
-                    unsigned int        checked:1;
-                    unsigned int        in_use:1;
+                    bool        changed;
+                    bool        allocated;
+                    bool        enabled;
+                    bool        checked;
+                    bool        in_use;
                 } status = {};
             protected:
                 callback_t              callback_func = unassigned_callback;
@@ -326,7 +326,7 @@ class DOSBoxMenu {
                     if (status.checked != f) {
                         status.checked  = f;
                         if (can_check() && has_vis_checked())
-                            status.changed = 1;
+                            status.changed = true;
                     }
 
                     return *this;
@@ -339,7 +339,7 @@ class DOSBoxMenu {
                     if (status.enabled != f) {
                         status.enabled  = f;
                         if (can_enable() && has_vis_enabled())
-                            status.changed = 1;
+                            status.changed = true;
                     }
 
                     return *this;
@@ -377,7 +377,7 @@ class DOSBoxMenu {
                 }
                 inline item &set_text(const std::string &str) {
                     if (has_vis_text() && text != str)
-                        status.changed = 1;
+                        status.changed = true;
 
                     text = str;
                     return *this;
@@ -388,7 +388,7 @@ class DOSBoxMenu {
                 }
                 inline item &set_shortcut_text(const std::string &str) {
                     if (has_vis_shortcut_text() && shortcut_text != str)
-                        status.changed = 1;
+                        status.changed = true;
 
                     shortcut_text = str;
                     return *this;
@@ -399,7 +399,7 @@ class DOSBoxMenu {
                 }
                 inline item &set_description(const std::string &str) {
                     if (has_vis_description() && description != str)
-                        status.changed = 1;
+                        status.changed = true;
 
                     description = str;
                     return *this;
@@ -410,7 +410,7 @@ class DOSBoxMenu {
                 }
                 inline item &set_accelerator(const struct accelerator &str) {
                     if (has_vis_accelerator()/* && accelerator != str*//*TODO*/)
-                        status.changed = 1;
+                        status.changed = true;
 
                     accelerator = str;
                     return *this;
