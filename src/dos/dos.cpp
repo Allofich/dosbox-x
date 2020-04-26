@@ -2423,7 +2423,7 @@ public:
 			char ch[]="*? .|<>/\\\"";
 			if (!*dos_clipboard_device_name||strlen(dos_clipboard_device_name)>8||!strcasecmp(dos_clipboard_device_name, "con")||!strcasecmp(dos_clipboard_device_name, "nul")||!strcasecmp(dos_clipboard_device_name, "prn"))
 				valid=false;
-			else for (int i=0; i<strlen(ch); i++) {
+			else for (unsigned int i=0; i<strlen(ch); i++) {
 				if (strchr(dos_clipboard_device_name, *(ch+i))!=NULL) {
 					valid=false;
 					break;
