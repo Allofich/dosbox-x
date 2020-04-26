@@ -524,7 +524,7 @@ bool fatDrive::getEntryName(const char *fullname, char *entname) {
 	}
 	if (uselfn) {
 		int j=0;
-		for (int i=0; i<strlen(findFile); i++)
+		for (unsigned int i=0; i<strlen(findFile); i++)
 			if (findFile[i]!=' '&&findFile[i]!=':'&&findFile[i]!='<'&&findFile[i]!='>'&&findFile[i]!='|'&&findFile[i]!='?'&&findFile[i]!='*') findFile[j++]=findFile[i];
 		findFile[j]=0;
 	}
