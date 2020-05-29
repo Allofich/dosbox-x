@@ -3656,12 +3656,15 @@ void DOS_Int21_71a8(char* name1, const char* name2) {
 			MEM_StrCopy(SegPhys(ds)+reg_si,name1,DOSNAMEBUF);
 			int i,j=0;
             char c[13];
+            char buf[13];
             const char* s = strrchr(name1, '.');
 			*c=0;
+            *buf = 0;
 			for (i=0;i<8;j++) {
 					if (name1[j] == 0 || s-name1 <= j) break;
 					if (name1[j] == '.') continue;
-					sprintf(c,"%s%c",c,toupper(name1[j]));
+                    strcpy(buf, c);
+					sprintf(c,"%s%c",buf,toupper(name1[j]));
 					i++;
 			}
 			if (s != NULL) {
@@ -3669,7 +3672,8 @@ void DOS_Int21_71a8(char* name1, const char* name2) {
 					if (s != 0 && reg_dh == 1) strcat(c,".");
 					for (i=0;i<3;i++) {
 							if (*(s+i) == 0) break;
-							sprintf(c,"%s%c",c,toupper(*(s+i)));
+                            strcpy(buf, c);
+							sprintf(c,"%s%c",buf,toupper(*(s+i)));
 					}
 			}
 			MEM_BlockWrite(SegPhys(es)+reg_di,c,strlen(c)+1);
