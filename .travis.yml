@@ -1,5 +1,29 @@
 language: cpp
 
+addons:
+  apt:
+    sources:
+      - sourceline: "ppa:jonathonf/ffmpeg-4"
+      - sourceline: "ppa:jonathonf/nasm"
+      #- ubuntu-toolchain-r-test
+      #- llvm-toolchain-xenial-8
+    packages:
+      #- libudev-dev
+      - nasm
+      - libavformat-dev
+      - libavcodec-dev
+      #- libavdevice-dev
+      - libavutil-dev
+      - libswscale-dev
+      #- libswresample-dev
+      #- libavfilter-dev
+      #- cmake
+      #- clang-8
+      #- clang-tools-8
+      #- gcc-9
+      #- g++-9
+      #- ccache 
+
 matrix:
   include:
     - os: linux
@@ -9,5 +33,5 @@ before_install:
   - eval "${MATRIX_EVAL}"
 
 script:
-  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then ./build-macosx; fi
-  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then ./build-debug-no-avcodec; fi
+  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then brew install ffmpeg; ./build-macosx; fi
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then ./build; fi
