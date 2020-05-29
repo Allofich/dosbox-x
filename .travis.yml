@@ -1,5 +1,9 @@
 language: cpp
 
+compiler:
+  - clang
+  - gcc
+
 addons:
   apt:
     sources:
@@ -27,11 +31,11 @@ addons:
 matrix:
   include:
     - os: linux
-    - os: osx
+    #- os: osx
 
 before_install:
   - eval "${MATRIX_EVAL}"
 
 script:
-  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then brew install ffmpeg; ./build-macosx; fi
+#  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then brew install ffmpeg; ./build-macosx; fi
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then ./build; fi
