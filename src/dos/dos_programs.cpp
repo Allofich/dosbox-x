@@ -363,7 +363,6 @@ void MenuMountDrive(char drive, const char drive2[DOS_PATHLENGTH]) {
 	} else newdrive=new localDrive(temp_line.c_str(),sizes[0],bit8size,sizes[2],sizes[3],mediaid,options);
 
 	if (!newdrive) E_Exit("DOS:Can't create drive");
-	if(error && (type==DRIVE_CDROM)) return;
 	Drives[drive-'A']=newdrive;
 	DOS_EnableDriveMenu(drive);
 	mem_writeb(Real2Phys(dos.tables.mediaid)+(drive-'A')*2,mediaid);
@@ -414,8 +413,10 @@ void MenuBrowseFolder(char drive, std::string drive_type) {
 		WIN32_FIND_DATA FindFileData;
 		HANDLE hFind;
 		hFind = FindFirstFile ( "*.*", &FindFileData );
-		if ( hFind != INVALID_HANDLE_VALUE ) MountHelper(drive,path,drive_type);
-		FindClose ( hFind );
+        if (hFind != INVALID_HANDLE_VALUE) {
+            MountHelper(drive, path, drive_type);
+            FindClose(hFind);
+        }
 		IMalloc * imalloc = 0;
 		if ( SUCCEEDED( SHGetMalloc ( &imalloc )) ) {
 			imalloc->Free ( pidl );
@@ -470,7 +471,10 @@ search:
 		WIN32_FIND_DATA FindFileData;
 		HANDLE hFind;
 		hFind = FindFirstFile(szFile, &FindFileData);
-		if (hFind == INVALID_HANDLE_VALUE) goto search;
+        if (hFind == INVALID_HANDLE_VALUE)
+            goto search;
+        else
+            FindClose(hFind);
 		char drive2	[_MAX_DRIVE]; 
 		char dir	[_MAX_DIR]; 
 		char fname	[_MAX_FNAME]; 
