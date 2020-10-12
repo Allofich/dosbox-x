@@ -101,7 +101,7 @@ FLUIDSYNTH_API void fluid_event_modulation(fluid_event_t* evt, int channel, shor
 FLUIDSYNTH_API void fluid_event_sustain(fluid_event_t* evt, int channel, short val);
 FLUIDSYNTH_API void fluid_event_pan(fluid_event_t* evt, int channel, short val);
 FLUIDSYNTH_API void fluid_event_volume(fluid_event_t* evt, int channel, short val);
-FLUIDSYNTH_API void fluid_event_reverb_send(fluid_event_t* evt, int channel, short val);
+//FLUIDSYNTH_API void fluid_event_reverb_send(fluid_event_t* evt, int channel, short val);
 FLUIDSYNTH_API void fluid_event_chorus_send(fluid_event_t* evt, int channel, short val);
 
 FLUIDSYNTH_API void fluid_event_channel_pressure(fluid_event_t* evt, int channel, short val);
