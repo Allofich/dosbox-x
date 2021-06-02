@@ -16,14 +16,14 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#include <stdio.h>
-#include <stddef.h>
-#include <stdint.h>
-
-#include "regionalloctracking.h"
-
 #ifndef DOSBOX_BIOS_H
 #define DOSBOX_BIOS_H
+
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+
+#include "regionalloctracking.h"
 
 #define BIOS_BASE_ADDRESS_COM1          0x400
 #define BIOS_BASE_ADDRESS_COM2          0x402

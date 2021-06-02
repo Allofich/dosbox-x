@@ -1,7 +1,6 @@
 
 #include <limits.h>
 #include <stdint.h>
-
 #include <utility>
 
 namespace bitop {
@@ -393,4 +392,3 @@ template <typename T=unsigned int> static inline bitseqlengthandpos_ret_t bitseq
 void self_test(void);
 
 }
-

@@ -16,8 +16,6 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-
-
 #ifndef DOSBOX_MOUSE_H
 #define DOSBOX_MOUSE_H
 

@@ -1,6 +1,6 @@
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
 //! \brief Intel 8255 base emulation class
 //!
@@ -177,4 +177,3 @@ protected:
         return (str != NULL) ? str : "";
     }
 };
-

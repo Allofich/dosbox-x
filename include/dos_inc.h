@@ -16,20 +16,15 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef DOSBOX_DOS_INC_H
 #define DOSBOX_DOS_INC_H
 
-#include <stddef.h>
-#define CTBUF 127
-
-#ifndef DOSBOX_DOS_SYSTEM_H
-#include "dos_system.h"
-#endif
-#ifndef DOSBOX_MEM_H
-#include "mem.h"
-#endif
 #include <stddef.h> //for offsetof
+
+#include "dos_system.h"
+#include "mem.h"
+
+#define CTBUF 127
 
 #ifdef _MSC_VER
 #pragma pack (1)

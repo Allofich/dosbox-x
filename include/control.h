@@ -16,39 +16,20 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef DOSBOX_CONTROL_H
 #define DOSBOX_CONTROL_H
+
+#include <list>
+#include <string>
+#include <vector>
+
+#include "programs.h"
+#include "setup.h"
 
 #ifdef _MSC_VER
 //#pragma warning ( disable : 4786 )
 //#pragma warning ( disable : 4290 )
 #endif
-
-#ifndef DOSBOX_PROGRAMS_H
-#include "programs.h"
-#endif
-#ifndef DOSBOX_SETUP_H
-#include "setup.h"
-#endif
-
-#ifndef CH_LIST
-#define CH_LIST
-#include <list>
-#endif
-
-#ifndef CH_VECTOR
-#define CH_VECTOR
-#include <vector>
-#endif
-
-#ifndef CH_STRING
-#define CH_STRING
-#include <string>
-#endif
-
-
-
 
 class Config{
 public:

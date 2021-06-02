@@ -20,6 +20,7 @@
 #define DOSBOX_LOGGING_H
 
 #include <stdio.h>
+
 #include "setup.h"
 
 enum LOG_TYPES {
@@ -78,4 +79,3 @@ void					DEBUG_ShowMsg(char const* format,...) GCC_ATTRIBUTE(__format__(__printf
 #define LOG_MSG				DEBUG_ShowMsg
 
 #endif //DOSBOX_LOGGING_H
-

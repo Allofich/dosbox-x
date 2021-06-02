@@ -16,17 +16,14 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef DOSBOX_PAGING_H
 #define DOSBOX_PAGING_H
 
-#ifndef DOSBOX_DOSBOX_H
+#include <exception>
 #include <iostream>
+
 #include "dosbox.h"
-#endif
-#ifndef DOSBOX_MEM_H
 #include "mem.h"
-#endif
 
 // disable this to reduce the size of the TLB
 // NOTE: does not work with the dynamic core (dynrec is fine)
@@ -500,8 +497,6 @@ static INLINE bool mem_writed_checked(const PhysPt address,const uint32_t val) {
 }
 
 extern bool dosbox_allow_nonrecursive_page_fault;	/* when set, do nonrecursive mode (when executing instruction) */
-
-#include <exception>
 
 class GuestPageFaultException : public std::exception {
 public:

@@ -19,6 +19,7 @@
 #ifdef __WIN32__
 #include <windows.h>
 #include <windowsx.h>
+
 #include "resource.h"
 #endif
 
@@ -44,4 +45,3 @@ struct MENU_Block {
 extern MENU_Block menu;
 
 #endif /* MENUDEF_H */
-

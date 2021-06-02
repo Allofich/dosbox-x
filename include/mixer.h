@@ -16,15 +16,12 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef DOSBOX_MIXER_H
 #define DOSBOX_MIXER_H
 
 #include <sstream>
 
-#ifndef DOSBOX_DOSBOX_H
 #include "dosbox.h"
-#endif
 
 typedef void (*MIXER_MixHandler)(uint8_t * sampdate,uint32_t len);
 typedef void (*MIXER_Handler)(Bitu len);

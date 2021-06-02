@@ -19,6 +19,11 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#ifndef DOSBOX_CONFIG_H
+#define DOSBOX_CONFIG_H
+
+#include "config_package.h" /* Linux-side configure script will write/rewrite this file so both Windows and Linux builds carry the same information --J.C. */
+
 /* DOSBox-X currently targets Windows XP or higher. */
 /* TODO: Can we drop this to 0x500 for Windows 2000? */
 /* TODO: What is the minimum appropriate WINVER for HX DOS extender? */
@@ -385,6 +390,4 @@ typedef         double     Real64;
 # pragma warning(disable:4996)
 #endif
 
-/* Linux-side configure script will write/rewrite this file so both Windows and Linux builds carry the same information --J.C. */
-#include "config_package.h"
-
+#endif

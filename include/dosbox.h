@@ -16,9 +16,19 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef DOSBOX_DOSBOX_H
 #define DOSBOX_DOSBOX_H
+
+#include <algorithm>
+#include <functional>
+#include <map>
+#include <sstream>
+#include <vector>
+
+#if defined(_MSC_VER)
+#include <sys/types.h>
+#include <sys/stat.h>
+#endif
 
 #include "config.h"
 #include "logging.h"
@@ -57,9 +67,6 @@
 /* ------------ */
 
 #if defined(_MSC_VER)
-# include <sys/types.h>
-# include <sys/stat.h>
-
 /* Microsoft has their own stat/stat64 scheme */
 # define pref_stat			_stati64
 # define pref_struct_stat	struct _stat64
@@ -84,7 +91,9 @@ GCC_ATTRIBUTE(noreturn) void		E_Exit(const char * format,...) GCC_ATTRIBUTE( __f
 typedef Bits cpu_cycles_count_t;
 typedef Bitu cpu_cycles_countu_t;
 
+#ifndef DOSBOX_CLOCKDOMAIN_H
 #include "clockdomain.h"
+#endif
 
 class Config;
 class Section;
@@ -173,10 +182,6 @@ void					DOSBOX_SetNormalLoop();
 #define PC98_ARCH_CASE			MCH_PC98
 
 #define FM_TOWNS_ARCH_CASE      MCH_FM_TOWNS
-
-#ifndef DOSBOX_LOGGING_H
-#include "logging.h"
-#endif // the logging system.
 
 extern ClockDomain			clockdom_PCI_BCLK;
 extern ClockDomain			clockdom_ISA_OSC;
@@ -271,13 +276,6 @@ static inline constexpr bytecount_t _tebibytes(const bytecount_t x) {
 
 #ifndef SAVE_STATE_H_INCLUDED
 #define SAVE_STATE_H_INCLUDED
-
-#include <sstream>
-#include <map>
-#include <algorithm>
-#include <functional>
-#include <vector>
-
 
 #define WRITE_POD(x,y) \
 	stream.write(reinterpret_cast<const char*>( (x) ), sizeof( (y) ) );

@@ -1,13 +1,13 @@
 
 #include "dos_inc.h"
-#include "../src/builtin/zip.h"
-#include "../src/builtin/eval.h"
+#include "../src/builtin/4DOS_img.h"
 #include "../src/builtin/cdplay.h"
 #include "../src/builtin/dosmid.h"
-#include "../src/builtin/mpxplay.h"
+#include "../src/builtin/eval.h"
 #include "../src/builtin/glide2x.h"
+#include "../src/builtin/mpxplay.h"
 #include "../src/builtin/textutil.h"
-#include "../src/builtin/4DOS_img.h"
+#include "../src/builtin/zip.h"
 
 extern struct BuiltinFileBlob bfb_DSXMENU_EXE_PC;		// DSXMENU.EXE
 extern struct BuiltinFileBlob bfb_DSXMENU_EXE_PC98;		// DSXMENU.EXE
@@ -64,4 +64,3 @@ extern struct BuiltinFileBlob bfb_132X60_COM;	// 132X60.COM
 extern struct BuiltinFileBlob bfb_132X50_COM;	// 132X50.COM
 extern struct BuiltinFileBlob bfb_132X43_COM;	// 132X43.COM
 extern struct BuiltinFileBlob bfb_132X25_COM;	// 132X25.COM
-

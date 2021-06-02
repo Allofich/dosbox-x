@@ -19,7 +19,7 @@
 #ifndef DOSBOX_MAPPER_H
 #define DOSBOX_MAPPER_H
 
-#include "include/menu.h"
+#include "menu.h"
 
 enum MapKeys {
     MK_nothing,

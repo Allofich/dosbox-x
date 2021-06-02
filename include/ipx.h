@@ -16,9 +16,12 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef DOSBOX_IPX_H
 #define DOSBOX_IPX_H
+
+#include "dosbox.h"
+#include "mem.h"
+#include "SDL_net.h"    // For Uint8 type
 
 // Uncomment this for a lot of debug messages:
 //#define IPX_DEBUGMSG 
@@ -31,13 +34,6 @@
 #else
 #define LOG_IPX(...)
 #endif
-#endif
-
-#ifndef DOSBOX_DOSBOX_H
-#include "dosbox.h"
-#endif
-#ifndef DOSBOX_MEM_H
-#include "mem.h"
 #endif
 
 // In Use Flag codes
@@ -68,9 +64,6 @@
 #ifdef _MSC_VER
 #pragma pack(1)
 #endif
-
-// For Uint8 type
-#include "SDL_net.h"
 
 struct PackedIP {
 	Uint32 host;

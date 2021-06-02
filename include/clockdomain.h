@@ -1,26 +1,25 @@
-
-/* DOSBox-X clock domain class.
+/*
+ * DOSBox-X clock domain class.
  * The clock domain implementation allows DOSBox-X to accurately
  * track time in clocks instead of less precise floating point
  * intervals, and to more accurately emulate hardware in terms of
  * the reference clock.
  *
- * (C) 2014 Jonathan Campbell */
-
-#include <stdint.h>
-#include <assert.h>
-#include <math.h>
-
-#include <string>
-#include <vector>
-#include <list>
+ * (C) 2014 Jonathan Campbell
+*/
 
 #ifndef DOSBOX_CLOCKDOMAIN_H
 #define DOSBOX_CLOCKDOMAIN_H
 
+#include <assert.h>
+#include <list>
+#include <math.h>
+#include <stdint.h>
+#include <string>
+#include <vector>
+
 #include "dosbox.h"
-/* this code contains support for existing DOSBox code that uses PIC_AddEvent, etc. callbacks */
-#include "pic.h"
+#include "pic.h"    /* this code contains support for existing DOSBox code that uses PIC_AddEvent, etc. callbacks */
 
 class ClockDomain {
 public:
@@ -65,4 +64,3 @@ public:
 };
 
 #endif //DOSBOX_CLOCKDOMAIN_H
-

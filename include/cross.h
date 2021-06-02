@@ -16,18 +16,13 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef DOSBOX_CROSS_H
 #define DOSBOX_CROSS_H
 
-#ifndef DOSBOX_DOSBOX_H
-#include "dosbox.h"
-#endif
-
 #include <stdio.h>
+#include <string>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <string>
 
 #if defined (_MSC_VER)						/* MS Visual C++ */
 #include <direct.h>
@@ -43,6 +38,64 @@
 #include <unistd.h>
 #define ULONGTYPE(a) a##ULL
 #define LONGTYPE(a) a##LL
+#endif
+
+//Solaris maybe others
+#if defined (DB_HAVE_NO_POWF)
+#include <math.h>
+static inline float powf(float x, float y) { return (float)pow(x, y); }
+#endif
+
+#if defined (WIN32)
+
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN        // Exclude rarely-used stuff from
+#endif
+
+#include <windows.h>
+
+typedef struct dir_struct {
+    HANDLE          handle;
+    char            base_path[(MAX_PATH + 4) * sizeof(wchar_t)];
+    wchar_t* wbase_path(void) {
+        return (wchar_t*)base_path;
+    }
+    // TODO: offer a config.h option to opt out of Windows widechar functions
+    union {
+        WIN32_FIND_DATAA a;
+        WIN32_FIND_DATAW w;
+    } search_data;
+    bool            wide;
+} dir_information;
+
+// TODO: offer a config.h option to opt out of Windows widechar functions
+dir_information* open_directory(const char* dirname);
+bool read_directory_first(dir_information* dirp, char* entry_name, char* entry_sname, bool& is_directory);
+bool read_directory_next(dir_information* dirp, char* entry_name, char* entry_sname, bool& is_directory);
+dir_information* open_directoryw(const wchar_t* dirname);
+bool read_directory_firstw(dir_information* dirp, wchar_t* entry_name, wchar_t* entry_sname, bool& is_directory);
+bool read_directory_nextw(dir_information* dirp, wchar_t* entry_name, wchar_t* entry_sname, bool& is_directory);
+
+#else
+#include <dirent.h>
+
+typedef struct dir_struct {
+    DIR* dir;
+    char base_path[CROSS_LEN];
+} dir_information;
+
+dir_information* open_directory(const char* dirname);
+bool read_directory_first(dir_information* dirp, char* entry_name, char* entry_sname, bool& is_directory);
+bool read_directory_next(dir_information* dirp, char* entry_name, char* entry_sname, bool& is_directory);
+
+#define open_directoryw open_directory
+#define read_directory_firstw read_directory_first
+#define read_directory_nextw read_directory_next
+
+#endif
+
+#ifndef DOSBOX_DOSBOX_H
+#include "dosbox.h"
 #endif
 
 #define CROSS_LEN 512						/* Maximum filename size */
@@ -64,12 +117,6 @@
 #define ftruncate(blah,blah2) chsize(blah,blah2)
 #endif
 
-//Solaris maybe others
-#if defined (DB_HAVE_NO_POWF)
-#include <math.h>
-static inline float powf (float x, float y) { return (float) pow (x,y); }
-#endif
-
 class Cross {
 public:
 	static void GetPlatformResDir(std::string& in);
@@ -80,57 +127,6 @@ public:
 	static void CreateDir(std::string const& in);
 	static bool IsPathAbsolute(std::string const& in);
 };
-
-
-#if defined (WIN32)
-
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN        // Exclude rarely-used stuff from
-#endif
-
-#include <windows.h>
-
-typedef struct dir_struct {
-	HANDLE          handle;
-	char            base_path[(MAX_PATH+4)*sizeof(wchar_t)];
-    wchar_t *wbase_path(void) {
-        return (wchar_t*)base_path;
-    }
-    // TODO: offer a config.h option to opt out of Windows widechar functions
-    union {
-        WIN32_FIND_DATAA a;
-        WIN32_FIND_DATAW w;
-    } search_data;
-    bool            wide;
-} dir_information;
-
-// TODO: offer a config.h option to opt out of Windows widechar functions
-dir_information* open_directory(const char* dirname);
-bool read_directory_first(dir_information* dirp, char* entry_name, char* entry_sname, bool& is_directory);
-bool read_directory_next(dir_information* dirp, char* entry_name, char* entry_sname, bool& is_directory);
-dir_information* open_directoryw(const wchar_t* dirname);
-bool read_directory_firstw(dir_information* dirp, wchar_t* entry_name, wchar_t* entry_sname, bool& is_directory);
-bool read_directory_nextw(dir_information* dirp, wchar_t* entry_name, wchar_t* entry_sname, bool& is_directory);
-
-#else
-
-//#include <sys/types.h> //Included above
-#include <dirent.h>
-
-typedef struct dir_struct { 
-	DIR*  dir;
-	char base_path[CROSS_LEN];
-} dir_information;
-
-dir_information* open_directory(const char* dirname);
-bool read_directory_first(dir_information* dirp, char* entry_name, char* entry_sname, bool& is_directory);
-bool read_directory_next(dir_information* dirp, char* entry_name, char* entry_sname, bool& is_directory);
-
-#define open_directoryw open_directory
-#define read_directory_firstw read_directory_first
-#define read_directory_nextw read_directory_next
-
-#endif
 
 void close_directory(dir_information* dirp);
 

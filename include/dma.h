@@ -16,9 +16,9 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef DOSBOX_DMA_H
 #define DOSBOX_DMA_H
+
 #include <fstream>
 
 enum DMAEvent {

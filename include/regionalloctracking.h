@@ -1,11 +1,13 @@
 
-#include "dosbox.h"
-
-#include <vector>
-#include <string>
-
 #ifndef DOSBOX_REGIONALLOCTRACKING_H
 #define DOSBOX_REGIONALLOCTRACKING_H
+
+#include <string>
+#include <vector>
+
+#ifndef DOSBOX_DOSBOX_H
+#include "dosbox.h"
+#endif
 
 /* rombios memory block */
 class RegionAllocTracking {
@@ -40,4 +42,3 @@ public:
 };
 
 #endif /* DOSBOX_REGIONALLOCTRACKING_H */
-

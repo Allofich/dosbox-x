@@ -16,12 +16,11 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-
 #ifndef DOSBOX_INOUT_H
 #define DOSBOX_INOUT_H
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
 #define IO_MAX (64*1024+3)
 
