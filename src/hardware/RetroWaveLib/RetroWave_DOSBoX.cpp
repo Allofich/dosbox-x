@@ -31,10 +31,10 @@ void retrowave_init_dosbox(const std::string& bus, const std::string& path, cons
 
 	if (bus == "serial") {
 #if defined (__linux__) || defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
-		char buf[128];
+		/*char buf[128];
 		snprintf(buf, sizeof(buf)-1, "/dev/%s", path.c_str());
 
-		rc = retrowave_init_posix_serialport(&retrowave_global_context, buf);
+		rc = retrowave_init_posix_serialport(&retrowave_global_context, buf);*/
 #endif
 
 #ifdef _WIN32
@@ -42,7 +42,7 @@ void retrowave_init_dosbox(const std::string& bus, const std::string& path, cons
 #endif
 	} else if (bus == "spi") {
 #if defined (__linux__)
-		auto scgs = string_split(spi_cs, ',');
+		/*auto scgs = string_split(spi_cs, ',');
 		int scg[2] = {0};
 
 		if (scgs.size() != 2) {
@@ -55,7 +55,7 @@ void retrowave_init_dosbox(const std::string& bus, const std::string& path, cons
 
 		printf("SPI CS: chip=%d, line=%d\n", scg[0], scg[1]);
 
-		rc = retrowave_init_linux_spi(&retrowave_global_context, path.c_str(), scg[0], scg[1]);
+		rc = retrowave_init_linux_spi(&retrowave_global_context, path.c_str(), scg[0], scg[1]);*/
 #else
 		DEBUG_ShowMsg("RetroWave: error: SPI is not supported on your platform!");
 #endif
