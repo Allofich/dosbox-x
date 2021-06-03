@@ -19,9 +19,6 @@
 #ifndef DOSBOX_BIOS_DISK_H
 #define DOSBOX_BIOS_DISK_H
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "mem.h"
 #include "dos_inc.h"
 #include "bios.h"

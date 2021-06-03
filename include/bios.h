@@ -19,10 +19,6 @@
 #ifndef DOSBOX_BIOS_H
 #define DOSBOX_BIOS_H
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdio.h>
-
 #include "regionalloctracking.h"
 
 #define BIOS_BASE_ADDRESS_COM1          0x400
