@@ -369,6 +369,7 @@ dnl Clang/LLVM already does this to some degree, let's get GCC to do it too.
 #AC_CHECK_CXXFLAGS([ -Wconversion-null ])
 #AC_CHECK_CXXFLAGS([ -Woverloaded-virtual ])    NOT TOO USEFUL
 #AC_CHECK_CXXFLAGS([ -Wno-deprecated-declarations ])
+AC_CHECK_CXXFLAGS([ -fpermissive ])
 
 dnl Let GCC 7.3.x know that the "fall through" switch cases in this codebase
 dnl are often intentional.
@@ -514,9 +515,9 @@ AH_TEMPLATE(C_TARGETCPU,[The type of cpu this target has])
 AC_MSG_CHECKING(for target cpu type) 
 case "$host_cpu" in
   x86_64 | amd64)
-    AC_DEFINE(C_TARGETCPU,X86_64)
-    AC_MSG_RESULT(x86-64 bit compatible)
-    c_targetcpu="x86_64"
+    AC_DEFINE(C_TARGETCPU,X86)
+    AC_MSG_RESULT(x86 compatible)
+    c_targetcpu="x86"
     c_unalignedmemory=yes
     ;;
   i?86)
