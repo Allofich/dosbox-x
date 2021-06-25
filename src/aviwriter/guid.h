@@ -19,8 +19,6 @@
 #ifndef __ISP_UTILS_V4_GUID_H
 #define __ISP_UTILS_V4_GUID_H
 
-#include <stdint.h>
-
 #include "config.h"
 
 #include "informational.h"

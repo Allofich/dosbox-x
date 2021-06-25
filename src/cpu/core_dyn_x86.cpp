@@ -23,13 +23,9 @@
 
 #include <assert.h>
 #include <stdarg.h>
-#include <stdio.h>
 #include <string.h>
-#include <stddef.h>
-#include <stdlib.h>
 
 #if defined (WIN32)
-#include <windows.h>
 #include <winbase.h>
 #endif
 
@@ -43,8 +39,6 @@
 #endif /* C_HAVE_MPROTECT */
 
 #include "callback.h"
-#include "regs.h"
-#include "mem.h"
 #include "cpu.h"
 #include "debug.h"
 #include "paging.h"
