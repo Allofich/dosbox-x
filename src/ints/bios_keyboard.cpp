@@ -1327,6 +1327,11 @@ Bitu INT16_Handler(void) {
         /* Weird call used by some dos apps */
         LOG(LOG_BIOS,LOG_NORMAL)("INT16:55:Word TSR compatible call");
         break;
+    case 0x92: // KEYB.COM KEYBOARD CAPABILITIES CHECK (not an actual function!)
+        reg_ah -= 0x12; // Keyboard functions AH=10h-12h are supported
+        break;
+    case 0xA2: // KEYB.COM KEYBOARD CAPABILITIES CHECK (not an actual function!)
+        break; // 122-key keyboard functions AH=20h-22h are not supported
     default:
         LOG(LOG_BIOS,LOG_ERROR)("INT16:Unhandled call %02X",reg_ah);
         break;
