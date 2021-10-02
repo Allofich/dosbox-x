@@ -70,7 +70,7 @@ static struct {
         bool acknowledged;
     } timer;
     struct {
-        double timer;
+        double timer = 0;
         double ended;
         double alarm;
     } last;
@@ -88,7 +88,16 @@ static void cmos_timerevent(Bitu val) {
     }
     if (cmos.timer.enabled) {
         PIC_AddEvent(cmos_timerevent,cmos.timer.delay);
-        cmos.regs[0xc] = 0xC0;//Contraption Zack (music)
+        double index = PIC_FullIndex();
+        if(index >= (cmos.last.timer + cmos.timer.delay)) {
+            cmos.last.timer = index;
+            cmos.regs[0xc] |= 0x40;
+        }
+        if(index >= (cmos.last.ended + 1000)) {
+            cmos.last.ended = index;
+            cmos.regs[0xc] |= 0x10;
+        }
+        //cmos.regs[0xc] = 0xC0;//Contraption Zack (music)
     }
 }
 
@@ -96,9 +105,10 @@ static void cmos_checktimer(void) {
     PIC_RemoveEvents(cmos_timerevent);
     if (cmos.timer.div<=2) cmos.timer.div+=7;
     cmos.timer.delay=(1000.0f/(32768.0f / (1 << (cmos.timer.div - 1))));
+    LOG(LOG_BIOS, LOG_NORMAL)("CMOS:timer delay is %.2f", cmos.timer.delay);
     if (!cmos.timer.div || !cmos.timer.enabled) return;
     LOG(LOG_PIT,LOG_NORMAL)("RTC Timer at %.2f hz",1000.0/cmos.timer.delay);
-//  PIC_AddEvent(cmos_timerevent,cmos.timer.delay);
+  //PIC_AddEvent(cmos_timerevent,cmos.timer.delay);
     /* A rtc is always running */
     double remd=fmod(PIC_FullIndex(),(double)cmos.timer.delay);
     PIC_AddEvent(cmos_timerevent,(float)((double)cmos.timer.delay-remd)); //Should be more like a real pc. Check
@@ -247,9 +257,11 @@ static void cmos_writereg(Bitu port,Bitu val,Bitu iolen) {
         cmos.regs[cmos.reg]=val & 0x7f;
         if ((val & 0x70)!=0x20) LOG(LOG_BIOS,LOG_ERROR)("CMOS:Illegal 22 stage divider value");
         cmos.timer.div=(val & 0xf);
+        LOG(LOG_BIOS, LOG_NORMAL)("CMOS:Reg A lower bits written with %x", cmos.timer.div);
         cmos_checktimer();
         break;
     case 0x0b:      /* Status reg B */
+        LOG(LOG_BIOS, LOG_NORMAL)("CMOS:Writing to register B with %x", val);
         if(date_host_forced) {
             bool waslocked = cmos.lock;
 
@@ -285,7 +297,7 @@ static void cmos_writereg(Bitu port,Bitu val,Bitu iolen) {
         }
         break;
     case 0x0c:      /* Status reg C */
-        if(date_host_forced) break;
+        break;
     case 0x0d:      /* Status reg D */
         if(!date_host_forced) {
             cmos.regs[cmos.reg]=val & 0x80; /*Bit 7=1:RTC Power on*/
@@ -422,7 +434,11 @@ static Bitu cmos_readreg(Bitu port,Bitu iolen) {
         if (cmos.timer.enabled) {
             /* In periodic interrupt mode only care for those flags */
             uint8_t val=cmos.regs[0xc];
+            if((cmos.regs[0xb] & 0x50) >0)
+                val |= 0x80;
             cmos.regs[0xc]=0;
+            LOG(LOG_BIOS, LOG_NORMAL)("a Reg b is %X", cmos.regs[0xb]);
+            LOG(LOG_BIOS, LOG_NORMAL)("a Reg c is %X", val);
             return val;
         } else {
             /* Give correct values at certain times */
@@ -431,12 +447,17 @@ static Bitu cmos_readreg(Bitu port,Bitu iolen) {
             if (index>=(cmos.last.timer+cmos.timer.delay)) {
                 cmos.last.timer=index;
                 val|=0x40;
+                if((cmos.regs[0xb] & 0x40) == 0x40)
+                    val |= 0x80;
             } 
             if (index>=(cmos.last.ended+1000)) {
                 cmos.last.ended=index;
                 val|=0x10;
             }
-            if(date_host_forced) cmos.regs[0xc] = 0;        // JAL_20060817 - reset here too!
+            //if(date_host_forced) cmos.regs[0xc] = 0;        // JAL_20060817 - reset here too!
+            cmos.regs[0xc] = 0;
+            LOG(LOG_BIOS, LOG_NORMAL)("b Reg b is %X", cmos.regs[0xb]);
+            LOG(LOG_BIOS, LOG_NORMAL)("b Reg c is %X", val);
             return val;
         }
     case 0x10:      /* Floppy size */
@@ -577,6 +598,7 @@ void CMOS_Reset(Section* sec) {
     cmos_writereg(0x71,0x26,1);
     cmos.reg=0xb;
     cmos_writereg(0x71,0x2,1);  //Struct tm *loctime is of 24 hour format,
+    cmos.regs[0x0c] = 0;
     if(date_host_forced) {
         cmos.regs[0x0d]=(uint8_t)0x80;
     } else {
