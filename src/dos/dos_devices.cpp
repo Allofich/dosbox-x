@@ -20,10 +20,8 @@
 #include <string.h>
 
 #include "control.h"
-#include "dosbox.h"
 #include "callback.h"
 #include "regs.h"
-#include "mem.h"
 #include "bios.h"
 #include "dos_inc.h"
 #include "support.h"

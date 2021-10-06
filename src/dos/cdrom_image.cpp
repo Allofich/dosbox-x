@@ -44,8 +44,6 @@
 
 #include "drives.h"
 #include "logging.h"
-#include "support.h"
-#include "setup.h"
 #include "src/libs/decoders/audio_convert.c"
 #include "src/libs/decoders/SDL_sound.c"
 #include "src/libs/decoders/vorbis.c"

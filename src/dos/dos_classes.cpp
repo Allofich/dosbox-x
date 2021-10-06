@@ -19,10 +19,7 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include "dosbox.h"
-#include "mem.h"
-#include "dos_inc.h"
-#include "support.h"
+
 #include "drives.h"
 
 uint8_t sdriv[260], sattr[260], fattr;
