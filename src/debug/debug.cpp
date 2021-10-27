@@ -1436,7 +1436,10 @@ uint32_t GetHexValue(char* const str, char* &hex,bool *parsed)
     while (*hex == ' ') hex++;
 
     // The user can enclose a value in double quotations to enter hex values that
-    // would collide with a flag name (AC, AF, CF, and DF).
+    // would collide with a flag name (AC, AF, CF, and DF). If "warn" is set true,
+    // a warning will be printed so the user knows what's happening.
+    bool warn = false;
+
     if (*hex == '\"') { hex++; }
     else if (strncmp(hex, "EFLAGS", 6) == 0) { hex += 6; regval = (uint32_t)reg_flags; }
     else if (strncmp(hex, "FLAGS", 5) == 0) { hex += 5; regval = (uint32_t)reg_flags; }
@@ -1476,10 +1479,10 @@ uint32_t GetHexValue(char* const str, char* &hex,bool *parsed)
     else if (strncmp(hex, "FS", 2) == 0) { hex += 2; regval = SegValue(fs); }
     else if (strncmp(hex, "GS", 2) == 0) { hex += 2; regval = SegValue(gs); }
     else if (strncmp(hex, "SS", 2) == 0) { hex += 2; regval = SegValue(ss); }
-    else if (strncmp(hex, "AC", 2) == 0) { hex += 2; regval = GETFLAG(AC); }
-    else if (strncmp(hex, "AF", 2) == 0) { hex += 2; regval = GETFLAG(AF); }
-    else if (strncmp(hex, "CF", 2) == 0) { hex += 2; regval = GETFLAG(CF); }
-    else if (strncmp(hex, "DF", 2) == 0) { hex += 2; regval = GETFLAG(DF); }
+    else if (strncmp(hex, "AC", 2) == 0) { hex += 2; regval = GETFLAG(AC); warn = true;}
+    else if (strncmp(hex, "AF", 2) == 0) { hex += 2; regval = GETFLAG(AF); warn = true;}
+    else if (strncmp(hex, "CF", 2) == 0) { hex += 2; regval = GETFLAG(CF); warn = true;}
+    else if (strncmp(hex, "DF", 2) == 0) { hex += 2; regval = GETFLAG(DF); warn = true;}
     else if (strncmp(hex, "ID", 2) == 0) { hex += 2; regval = GETFLAG(ID); }
     else if (strncmp(hex, "IF", 2) == 0) { hex += 2; regval = GETFLAG(IF); }
     else if (strncmp(hex, "NT", 2) == 0) { hex += 2; regval = GETFLAG(NT); }
@@ -1513,6 +1516,9 @@ uint32_t GetHexValue(char* const str, char* &hex,bool *parsed)
 
     if (parsed != NULL)
         *parsed = (hex != str);
+
+    if (warn)
+        DEBUG_ShowMsg("NOTE: The entered value referenced flag AC, AF, CF or DF. To use hex values instead, re-enter the value enclosed in quotation marks.");
 
     return regval + value;
 }
