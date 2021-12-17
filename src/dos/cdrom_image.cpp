@@ -724,8 +724,7 @@ void CDROM_Interface_Image::ChannelControl(TCtrl ctrl)
 	player.ctrlData = ctrl;
 
 	// Adjust the volume of our mixer channel as defined by the application
-	player.channel->SetScale(static_cast<float>(ctrl.vol[0]),  // left vol
-	                         static_cast<float>(ctrl.vol[1])); // right vol
+	player.channel->SetScale(static_cast<float>(ctrl.vol[0])); // right vol
 }
 
 bool CDROM_Interface_Image::ReadSectors(PhysPt buffer, bool raw, unsigned long sector, unsigned long num)

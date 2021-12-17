@@ -20,119 +20,116 @@
 #ifndef DOSBOX_MIXER_H
 #define DOSBOX_MIXER_H
 
-typedef void (*MIXER_MixHandler)(uint8_t * sampdate,uint32_t len);
+#ifndef DOSBOX_DOSBOX_H
+#include "dosbox.h"
+#endif
+
+typedef void (*MIXER_MixHandler)(Bit8u* sampdate, Bit32u len);
 typedef void (*MIXER_Handler)(Bitu len);
 
 template <class T> T clamp(const T& n, const T& lower, const T& upper) {
-	return std::max<T>(lower, std::min<T>(n, upper));
+    return std::max<T>(lower, std::min<T>(n, upper));
 }
+
+enum BlahModes {
+    MIXER_8MONO, MIXER_8STEREO,
+    MIXER_16MONO, MIXER_16STEREO
+};
+
+enum MixerModes {
+    M_8M, M_8S,
+    M_16M, M_16S
+};
 
 #define MIXER_BUFSIZE (16*1024)
 #define MIXER_BUFMASK (MIXER_BUFSIZE-1)
-extern uint8_t MixTemp[MIXER_BUFSIZE];
+extern Bit8u MixTemp[MIXER_BUFSIZE];
 
 #define MAX_AUDIO ((1<<(16-1))-1)
 #define MIN_AUDIO -(1<<(16-1))
 
-#define LOWPASS_ORDER 8
-
 class MixerChannel {
 public:
-	void SetVolume(float _left,float _right);
-	void SetScale( float f );
-	void SetScale(float _left, float _right);
-	void UpdateVolume(void);
-	void SetLowpassFreq(Bitu _freq,unsigned int order=2); // _freq / 1 Hz. call with _freq == 0 to disable
-	void SetSlewFreq(Bitu _freq); // denominator provided by call to SetFreq. call with _freq == 0 to disable
-	void SetFreq(Bitu _freq,Bitu _den=1U);
-	void Mix(Bitu whole,Bitu frac);
-	void AddSilence(void);			//Fill up until needed
-	void EndFrame(Bitu samples);
+    void SetVolume(float _left, float _right);
+    void SetScale(float f);
+    void UpdateVolume(void);
+    void SetFreq(Bitu _freq);
+    void Mix(Bitu _needed);
+    void AddSilence(void);			//Fill up until needed
 
-	void lowpassUpdate();
-	int32_t lowpassStep(int32_t in,const unsigned int iteration,const unsigned int channel);
-	void lowpassProc(int32_t ch[2]);
+    template<class Type, bool stereo, bool signeddata, bool nativeorder>
+    void AddSamples(Bitu len, const Type* data);
 
-	template<class Type,bool stereo,bool signeddata,bool nativeorder,bool lowpass>
-	void loadCurrentSample(Bitu &len, const Type* &data);
+    void AddSamples_m8(Bitu len, const Bit8u* data);
+    void AddSamples_s8(Bitu len, const Bit8u* data);
+    void AddSamples_m8s(Bitu len, const Bit8s* data);
+    void AddSamples_s8s(Bitu len, const Bit8s* data);
+    void AddSamples_m16(Bitu len, const Bit16s* data);
+    void AddSamples_s16(Bitu len, const Bit16s* data);
+    void AddSamples_m16u(Bitu len, const Bit16u* data);
+    void AddSamples_s16u(Bitu len, const Bit16u* data);
+    void AddSamples_m32(Bitu len, const Bit32s* data);
+    void AddSamples_s32(Bitu len, const Bit32s* data);
+    void AddSamples_m16_nonnative(Bitu len, const Bit16s* data);
+    void AddSamples_s16_nonnative(Bitu len, const Bit16s* data);
+    void AddSamples_m16u_nonnative(Bitu len, const Bit16u* data);
+    void AddSamples_s16u_nonnative(Bitu len, const Bit16u* data);
+    void AddSamples_m32_nonnative(Bitu len, const Bit32s* data);
+    void AddSamples_s32_nonnative(Bitu len, const Bit32s* data);
+    void SaveState(std::ostream& stream);
+    void LoadState(std::istream& stream);
+    void SetLowpassFreq(Bitu _freq, unsigned int order = 2); // _freq / 1 Hz. call with _freq == 0 to disable
+    void SetSlewFreq(Bitu _freq); // denominator provided by call to SetFreq. call with _freq == 0 to disable
 
-	template<class Type,bool stereo,bool signeddata,bool nativeorder>
-	void AddSamples(Bitu len, const Type* data);
-	double timeSinceLastSample(void);
+    void AddStretched(Bitu len, Bit16s* data);		//Strech block up into needed data
 
-	bool runSampleInterpolation(const Bitu upto);
+    void FillUp(void);
+    void Enable(bool _yesno);
+    MIXER_Handler handler;
+    float volmain[2];
+    float scale;
+    Bit32s volmul[2];
 
-	void updateSlew(void);
-	void padFillSampleInterpolation(const Bitu upto);
-	void finishSampleInterpolation(const Bitu upto);
-	void AddSamples_m8(Bitu len, const uint8_t * data);
-	void AddSamples_s8(Bitu len, const uint8_t * data);
-	void AddSamples_m8s(Bitu len, const int8_t * data);
-	void AddSamples_s8s(Bitu len, const int8_t * data);
-	void AddSamples_m16(Bitu len, const int16_t * data);
-	void AddSamples_s16(Bitu len, const int16_t * data);
-	void AddSamples_m16u(Bitu len, const uint16_t * data);
-	void AddSamples_s16u(Bitu len, const uint16_t * data);
-	void AddSamples_m32(Bitu len, const int32_t * data);
-	void AddSamples_s32(Bitu len, const int32_t * data);
-	void AddSamples_m16_nonnative(Bitu len, const int16_t * data);
-	void AddSamples_s16_nonnative(Bitu len, const int16_t * data);
-	void AddSamples_m16u_nonnative(Bitu len, const uint16_t * data);
-	void AddSamples_s16u_nonnative(Bitu len, const uint16_t * data);
-	void AddSamples_m32_nonnative(Bitu len, const int32_t * data);
-	void AddSamples_s32_nonnative(Bitu len, const int32_t * data);
-
-	void FillUp(void);
-	void Enable(bool _yesno);
-	void SaveState( std::ostream& stream );
-	void LoadState( std::istream& stream );
-
-	MIXER_Handler handler;
-	float volmain[2];
-	float scale[2];
-	int32_t volmul[2];
-	int32_t lowpass[LOWPASS_ORDER][2];	// lowpass filter
-	int32_t lowpass_alpha;			// "alpha" multiplier for lowpass (16.16 fixed point)
-	Bitu lowpass_freq;
-	unsigned int lowpass_order;
-	bool lowpass_on_load;			// apply lowpass on sample load (if source rate > mixer rate)
-	bool lowpass_on_out;			// apply lowpass on rendered output (if source rate <= mixer rate)
-	unsigned int freq_f,freq_fslew;
-	unsigned int freq_nslew,freq_nslew_want;
-	unsigned int rendering_to_n,rendering_to_d;
-	unsigned int rend_n,rend_d;
-	unsigned int freq_n,freq_d,freq_d_orig;
-	bool current_loaded;
-	int32_t current[2],last[2],delta[2],max_change;
-	int32_t msbuffer[2048][2];		// more than enough for 1ms of audio, at mixer sample rate
-	Bits last_sample_write;
-	Bitu msbuffer_o;
-	Bitu msbuffer_i;
-	const char * name;
-	bool enabled;
-	MixerChannel * next;
+    //This gets added the frequency counter each mixer step
+    Bitu freq_add;
+    //When this flows over a new sample needs to be read from the device
+    Bitu freq_counter;
+    //Timing on how many samples have been done and were needed by th emixer
+    Bitu done, needed;
+    //Previous and next samples
+    Bits prevSample[2];
+    Bits nextSample[2];
+    //Simple way to lower the impact of DC offset. if MIXER_UPRAMP_STEPS is >0.
+    //Still work in progress and thus disabled for now.
+    Bits offset[2];
+    const char* name;
+    bool interpolate;
+    bool enabled;
+    bool last_samples_were_stereo;
+    bool last_samples_were_silence;
+    MixerChannel* next;
 };
 
-MixerChannel * MIXER_AddChannel(MIXER_Handler handler,Bitu freq,const char * name);
-MixerChannel * MIXER_FindChannel(const char * name);
+MixerChannel* MIXER_AddChannel(MIXER_Handler handler, Bitu freq, const char* name);
+MixerChannel* MIXER_FindChannel(const char* name);
 /* Find the device you want to delete with findchannel "delchan gets deleted" */
-void MIXER_DelChannel(MixerChannel* delchan); 
+void MIXER_DelChannel(MixerChannel* delchan);
 
 /* Object to maintain a mixerchannel; As all objects it registers itself with create
  * and removes itself when destroyed. */
-class MixerObject{
+class MixerObject {
 private:
-	bool installed;
-    char m_name[32] = {};
+    bool installed;
+    char m_name[32];
 public:
-	MixerObject():installed(false){};
-	MixerChannel* Install(MIXER_Handler handler,Bitu freq,const char * name);
-	~MixerObject();
+    MixerObject() :installed(false) {};
+    MixerChannel* Install(MIXER_Handler handler, Bitu freq, const char* name);
+    ~MixerObject();
 };
 
 
 /* PC Speakers functions, tightly related to the timer functions */
-void PCSPEAKER_SetCounter(Bitu cntr,Bitu mode);
+void PCSPEAKER_SetCounter(Bitu cntr, Bitu mode);
 void PCSPEAKER_SetType(bool pit_clock_gate_enabled, bool pit_output_enabled);
 void PCSPEAKER_SetPITControl(Bitu mode);
 
