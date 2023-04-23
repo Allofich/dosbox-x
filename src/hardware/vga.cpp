@@ -162,6 +162,7 @@ using namespace std;
 Bitu pc98_read_9a8(Bitu /*port*/,Bitu /*iolen*/);
 void pc98_write_9a8(Bitu port,Bitu val,Bitu iolen);
 
+void SVGA_Setup_ATI(void);
 bool VGA_IsCaptureEnabled(void);
 void VGA_UpdateCapturePending(void);
 bool VGA_CaptureHasNextFrame(void);
@@ -1524,6 +1525,22 @@ void VGA_Init() {
 
 	vga.config.chained = false;
 
+    vga.herc.xMode = 0;
+    vga.herc.underline = 0xD;
+    vga.herc.strikethrough = 0xD;
+    vga.herc.latch = 0;
+    vga.herc.exception = 0x20;
+    vga.herc.planemask_protect = 0;
+    vga.herc.planemask_visible = 0xF;
+    vga.herc.maskpolarity = 0xFF;
+    vga.herc.write_mode = 0;
+    vga.herc.dont_care = 0;
+    vga.herc.fgcolor = 0xF;
+    vga.herc.bgcolor = 0x0;
+    vga.herc.latchprotect = 0;
+    vga.herc.palette_index = 0;
+    for (unsigned int i=0;i < 8;i++) vga.herc.palette[i] = i;
+    for (unsigned int i=8;i < 16;i++) vga.herc.palette[i] = i + 0x30;
     vga.draw.render_step = 0;
     vga.draw.render_max = 1;
 
@@ -1816,65 +1833,6 @@ void SVGA_Setup_JEGA(void) {
 	PhysPt rom_base = PhysMake(0xc000, 0);
 	phys_writeb(rom_base + 0x40 * 512 - 18 + 2, 'J');
 	phys_writeb(rom_base + 0x40 * 512 - 18 + 3, 'A');
-}
-
-struct ATIState {
-	uint8_t			index = 0;
-	uint8_t			input_status_register = 0; /* index 0xBB */
-};
-
-ATIState ati_state;
-
-Bitu ATIExtIndex_Read(Bitu /*port*/, Bitu /*len*/) {
-	return ati_state.index;
-}
-
-void ATIExtIndex_Write(Bitu /*port*/, Bitu val, Bitu /*len*/) {
-	ati_state.index = (uint8_t)val;
-}
-
-Bitu ATIExtData_Read(Bitu port, Bitu /*len*/) {
-	switch (ati_state.index) {
-		case 0xBB: /* Input status register */
-			return ati_state.input_status_register;
-		default:
-			break;
-	};
-
-	LOG(LOG_MISC,LOG_DEBUG)("Unhandled ATI extended read port=%x index=%x",(unsigned int)port,ati_state.index);
-	return 0;
-}
-
-void ATIExtData_Write(Bitu port, Bitu val, Bitu /*len*/) {
-	switch (ati_state.index) {
-		case 0xBB: /* Input status register */
-			ati_state.input_status_register = (uint8_t)val;
-			break;
-		default:
-			break;
-	};
-
-	LOG(LOG_MISC,LOG_DEBUG)("Unhandled ATI extended write port=%x index=%x val=%x",(unsigned int)port,ati_state.index,(unsigned int)val);
-}
-
-void SVGA_Setup_ATI(void) {
-	if (vga.mem.memsize == 0)
-		vga.mem.memsize = 512*1024;
-
-	if (vga.mem.memsize >= (512*1024))
-		vga.mem.memsize = (512*1024);
-	else
-		vga.mem.memsize = (256*1024);
-
-	ati_state.input_status_register = 0x05/*multisync monitor*/;
-
-	/* FIXME: ATI 188xx-specific */
-	if (vga.mem.memsize >= (512*1024)) ati_state.input_status_register |= 0x20; /* 512KB, not 256KB, of RAM */
-
-	IO_RegisterWriteHandler(0x1ce,&ATIExtIndex_Write,IO_MB);
-	IO_RegisterReadHandler(0x1ce,&ATIExtIndex_Read,IO_MB);
-	IO_RegisterWriteHandler(0x1cf,&ATIExtData_Write,IO_MB);
-	IO_RegisterReadHandler(0x1cf,&ATIExtData_Read,IO_MB);
 }
 
 void SVGA_Setup_Driver(void) {
