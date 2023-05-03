@@ -6774,7 +6774,7 @@ extern bool log_keyboard_scan_codes;
 bool showconsole_init = false;
 
 #if C_DEBUG
-bool DEBUG_IsDebuggerConsoleVisible(void);
+bool IsDebuggerActive();
 #endif
 
 void DOSBox_ShowConsole() {
@@ -6785,7 +6785,7 @@ void DOSBox_ShowConsole() {
 
 #if C_DEBUG
     /* if the debugger has already taken the console, do nothing */
-    if (DEBUG_IsDebuggerConsoleVisible())
+    if (IsDebuggerActive())
         return;
 #endif
 

@@ -4395,7 +4395,10 @@ void DEBUG_Enable_Handler(bool pressed) {
         CBreakpoint::ActivateBreakpointsExceptAt(SegPhys(cs)+reg_eip);
         DOSBOX_SetNormalLoop();	
         GFX_SetTitle(-1,-1,-1,is_paused);
-        if (tohide) return;
+        if(tohide) {
+            mainMenu.get_item("show_console").check(false).enable(true).refresh_item(mainMenu);
+            return;
+        }
     }
 
 	static bool showhelp=false;

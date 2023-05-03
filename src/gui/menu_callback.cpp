@@ -2308,8 +2308,8 @@ bool show_console_menu_callback(DOSBoxMenu * const menu,DOSBoxMenu::item * const
     (void)menuitem;//UNUSED
 #if !defined(C_EMSCRIPTEN) && defined(WIN32) && !defined(HX_DOS)
 #if C_DEBUG
-    bool DEBUG_IsDebuggerConsoleVisible(void);
-    if (DEBUG_IsDebuggerConsoleVisible())
+    bool IsDebuggerActive(void);
+    if (IsDebuggerActive())
         return true;
 #endif
     auto window = GetForegroundWindow();
