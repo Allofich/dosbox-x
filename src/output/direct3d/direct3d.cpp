@@ -361,7 +361,7 @@ bool CDirect3D::UnlockTexture(void)
 
 HRESULT CDirect3D::InitD3D(void)
 {
-    IDirect3D9 *(APIENTRY *pDirect3DCreate9)(UINT) = (IDirect3D9 *(APIENTRY *)(UINT))GetProcAddress(mhmodDX9, "Direct3DCreate9");
+    IDirect3D9 *(APIENTRY *pDirect3DCreate9)(UINT) = reinterpret_cast<IDirect3D9 *(APIENTRY *)(UINT)>(GetProcAddress(mhmodDX9, "Direct3DCreate9"));
     if(!pDirect3DCreate9)
 	return E_FAIL;
 
