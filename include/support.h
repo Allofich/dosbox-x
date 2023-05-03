@@ -27,7 +27,7 @@
 #define strncasecmp(a,b,n) _strnicmp(a,b,n)
 #endif
 
-#define safe_strncpy(a,b,n) do { strncpy((a),(b),(size_t)((n)-1)); (a)[(size_t)((n)-1)] = 0; } while (0)
+#define safe_strncpy(a, b, n) do { memmove((a), (b), (size_t)((n)-1)); (a)[(size_t)((n)-1)] = 0; } while (0)
 
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
