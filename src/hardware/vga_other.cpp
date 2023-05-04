@@ -143,8 +143,7 @@ static void write_crtc_data_other(Bitu /*port*/,Bitu val,Bitu /*iolen*/) {
 		break;
 	case 0x14:	/* Hercules InColor and HGC+: xMode */
 		if (hercCard == HERC_InColor || hercCard == HERC_GraphicsCardPlus) {
-			// TODO: HGC+ and InColor bit 0 controls whether the RAM font at B4000h is drawn in text mode, and bit 2 the 48k RAMfont mode.
-			//       Depending on implementation this affects which VGA draw line function to assign.
+			// HGC+ and InColor bit 0 controls whether the RAM font at B4000h is drawn in text mode, and bit 2 the 48k RAMfont mode.
 			const uint8_t chg = vga.herc.xMode ^ (uint8_t)val;
 			if (chg & 2/*bit 1: change 80/90 column mode*/) VGA_StartResize();
 			vga.herc.xMode = (uint8_t)val;
@@ -1194,9 +1193,11 @@ Bitu read_herc_status(Bitu /*port*/,Bitu /*iolen*/) {
 
 	switch (hercCard) {
 		case HERC_GraphicsCardPlus:
+			retval &= 0x8F;
 			retval |= 0x10;
 			break;
 		case HERC_InColor:
+			retval &= 0x8F;
 			retval |= 0x50;
 			break;
 		default:
