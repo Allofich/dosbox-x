@@ -7,7 +7,7 @@ AC_SUBST(prefix)
 
 AC_PROG_CC
 
-AC_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS(config.h)
 dnl Checks for system first
 AC_CANONICAL_SYSTEM([])
 

@@ -118,10 +118,10 @@ fi
 dnl Check for OpenGL
 AC_MSG_CHECKING(for OpenGL support)
 have_opengl=no
-AC_TRY_COMPILE([
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
  #include "SDL_opengl.h"
-],[
-],[
+]],[[
+]])],[
 have_opengl=yes
 ])
 AC_MSG_RESULT($have_opengl)
@@ -129,14 +129,14 @@ AC_MSG_RESULT($have_opengl)
 dnl Check for OpenGL ES
 AC_MSG_CHECKING(for OpenGL ES support)
 have_opengles=no
-AC_TRY_COMPILE([
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
  #if defined (__IPHONEOS__)
     #include <OpenGLES/ES1/gl.h>
  #else
     #include <GLES/gl.h>
  #endif /* __QNXNTO__ */
-],[
-],[
+]],[[
+]])],[
 have_opengles=yes
 ])
 AC_MSG_RESULT($have_opengles)
@@ -144,7 +144,7 @@ AC_MSG_RESULT($have_opengles)
 dnl Check for OpenGL ES2
 AC_MSG_CHECKING(for OpenGL ES2 support)
 have_opengles2=no
-AC_TRY_COMPILE([
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
  #if defined (__IPHONEOS__)
     #include <OpenGLES/ES2/gl.h>
     #include <OpenGLES/ES2/glext.h>
@@ -152,8 +152,8 @@ AC_TRY_COMPILE([
     #include <GLES2/gl2.h>
     #include <GLES2/gl2ext.h>
  #endif
-],[
-],[
+]],[[
+]])],[
 have_opengles2=yes
 ])
 AC_MSG_RESULT($have_opengles2)
@@ -188,4 +188,5 @@ fi
 AC_SUBST(SDL_TTF_LIB)
 
 dnl Finally create all the generated files
-AC_OUTPUT([Makefile])
+AC_CONFIG_FILES(Makefile)
+AC_OUTPUT

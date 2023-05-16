@@ -152,6 +152,7 @@ CXXFLAGS="$CXXFLAGS $CFLAGS"
 AC_SUBST([WINDRES])
 
 # Finally create all the generated files
-AC_OUTPUT([
+AC_CONFIG_FILES(
 Makefile SDL_net.spec SDL_net.qpg SDL_net.pc
-])
+)
+AC_OUTPUT

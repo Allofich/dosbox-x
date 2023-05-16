@@ -252,9 +252,9 @@ save_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $SYS_DEFS $MH_XINC_DIR"
 for td in $1 ; do
 AC_MSG_CHECKING(if $td is typedefed:)
-AC_TRY_COMPILE(
-[#include "X11/Xlib.h"],
-[$td fred],
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+[[#include "X11/Xlib.h"]],
+[[$td fred]])],
 	[mh_td=yes],
 	[mh_td=no]
 )
@@ -570,8 +570,8 @@ AC_MSG_CHECKING(for maximum signal specifier:)
 AC_CACHE_VAL(mh_cv_max_signals,
 mh_found="no"
 for mh_sigs in $1; do
-	AC_TRY_COMPILE([#include <signal.h>],
-[return $mh_sigs;],
+	AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <signal.h>]],
+[[return $mh_sigs;]])],
   mh_found="yes"; mh_cv_max_signals="$mh_sigs" )
 	if test "$mh_found" = "yes"; then
 		break;
