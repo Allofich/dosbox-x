@@ -392,8 +392,6 @@ AC_CHECK_CXXFLAGS([ -Wno-format-zero-length ])
 
 dnl Clang/LLVM warning: don't care the address of a member may be unaligned, unless targeting ARM!
 AC_CHECK_CXXFLAGS([ -Wno-address-of-packed-member ])
-dnl Clang/LLVM warning: don't care about int to void*, since void* is either same size or larger
-AC_CHECK_CXXFLAGS([ -Wno-int-to-void-pointer-cast ])
 
 dnl Some stuff for the icon and other makefile platform stuff.
 dnl Slightly double with the above, but that deals more with compiled features.
