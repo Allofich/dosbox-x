@@ -396,7 +396,7 @@ static INLINE uint16_t DOS_PackDate(uint16_t year,uint16_t mon,uint16_t day) {
 
 class MemStruct {
 public:
-    inline uint32_t GetIt(const uint32_t size, const PhysPt addr) {
+    inline uint32_t GetIt(const uint32_t size, const PhysPt addr) const {
 		switch (size) {
 		case 1:return mem_readb(pt+addr);
 		case 2:return mem_readw(pt+addr);
@@ -404,7 +404,7 @@ public:
 		}
 		return 0;
 	}
-	inline void SaveIt(const uint32_t size, const PhysPt addr, const uint32_t val) {
+	inline void SaveIt(const uint32_t size, const PhysPt addr, const uint32_t val) const {
 		switch (size) {
 		case 1:mem_writeb(pt+addr,(uint8_t)val);break;
 		case 2:mem_writew(pt+addr,(uint16_t)val);break;
@@ -435,7 +435,7 @@ public:
 	uint16_t	GetSize				(void)					{ return (uint16_t)sGet(sPSP,next_seg);		};
 	void	SetEnvironment		(uint16_t envseg)			{ sSave(sPSP,environment,envseg);	};
 	uint16_t	GetEnvironment		(void)					{ return (uint16_t)sGet(sPSP,environment);	};
-	uint16_t	GetSegment			(void)					{ return seg;						};
+	uint16_t	GetSegment			(void) const			{ return seg;						};
 	void	SetFileHandle		(uint16_t index, uint8_t handle);
 	uint8_t	GetFileHandle		(uint16_t index);
 	void	SetParent			(uint16_t parent)			{ sSave(sPSP,psp_parent,parent);	};
@@ -706,8 +706,8 @@ private:
 class DOS_MCB : public MemStruct{
 public:
 	DOS_MCB(uint16_t seg) { SetPt(seg); }
-	void SetFileName(const char * const _name) { MEM_BlockWrite(pt+offsetof(sMCB,filename),_name,8); }
-	void GetFileName(char * const _name) { MEM_BlockRead(pt+offsetof(sMCB,filename),_name,8);_name[8]=0;}
+	void SetFileName(const char * const _name) const { MEM_BlockWrite(pt+offsetof(sMCB,filename),_name,8); }
+	void GetFileName(char * const _name) const { MEM_BlockRead(pt+offsetof(sMCB,filename),_name,8);_name[8]=0;}
 	void SetType(uint8_t _type) { sSave(sMCB,type,_type);}
 	void SetSize(uint16_t _size) { sSave(sMCB,size,_size);}
 	void SetPSPSeg(uint16_t _pspseg) { sSave(sMCB,psp_segment,_pspseg);}

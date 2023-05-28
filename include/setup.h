@@ -37,7 +37,7 @@ private:
 public:
 	Hex(int in):_hex(in) { };
 	Hex():_hex(0) { };
-	bool operator==(Hex const& other) {return _hex == other._hex;}
+	bool operator==(Hex const& other) const {return _hex == other._hex;}
 	operator int () const { return _hex; }
 };
 
@@ -120,8 +120,8 @@ public:
 	virtual bool CheckValue(Value const& in, bool warn);
 	virtual ~Property(){ }
 	virtual const std::vector<Value>& GetValues() const;
-	Value::Etype Get_type(){return default_value.type;}
-	Changeable::Value getChange() {return change;}
+	Value::Etype Get_type() const {return default_value.type;}
+	Changeable::Value getChange() const {return change;}
 	bool basic() const { return is_basic; };
 	bool modified() const {
         //return is_modified;
@@ -168,8 +168,8 @@ public:
 		:Property(_propname,when), min(_min), max(_max) {
 		default_value = value = _value;
 	}
-	int getMin() { return min;}
-	int getMax() { return max;}
+	int getMin() const { return min;}
+	int getMax() const { return max;}
 	void SetMinMax(Value const& min,Value const& max) {this->min = min; this->max=max;}
 	bool SetValue(std::string const& input);
 	virtual ~Prop_int(){ }

@@ -147,7 +147,7 @@ static EMM_Mapping emm_segmentmappings[0x40];
 
 bool EMS_GetMapping(Bitu &handle,uint16_t &log_page,Bitu ems_page) {
     if (ems_page < EMM_MAX_PHYS) {
-        auto &x = emm_mappings[ems_page];
+        const auto &x = emm_mappings[ems_page];
 
         if (x.handle != NULL_HANDLE && x.page != NULL_PAGE) {
             handle = x.handle;
@@ -161,7 +161,7 @@ bool EMS_GetMapping(Bitu &handle,uint16_t &log_page,Bitu ems_page) {
 
 bool EMS_GetHandle(Bitu &size,PhysPt &addr,std::string &name,Bitu handle) {
     if (handle < EMM_MAX_HANDLES) {
-        auto &x = emm_handles[handle];
+        const auto &x = emm_handles[handle];
 
         if (x.pages != NULL_HANDLE) {
             {
@@ -1619,7 +1619,7 @@ public:
 		vcpi.enabled=false;
 		GEMMIS_seg=0;
 
-		Section_prop * section=static_cast<Section_prop *>(configuration);
+		const Section_prop* section = static_cast<Section_prop*>(configuration);
 		ems_syshandle_on_even_mb = section->Get_bool("ems system handle on even megabyte");
 		zero_int67_if_no_ems = section->Get_bool("zero int 67h if no ems");
 		ems_type = GetEMSType(section);

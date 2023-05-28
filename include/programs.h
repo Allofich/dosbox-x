@@ -34,7 +34,7 @@ public:
 public:
 	CommandLine(int argc,char const * const argv[],enum opt_style opt=CommandLine::either);
 	CommandLine(char const * const name,char const * const cmdline,enum opt_style opt=CommandLine::either,bool squote=false);
-	const char * GetFileName(){ return file_name.c_str();}
+	const char * GetFileName() const { return file_name.c_str();}
 
 	bool FindExist(char const * const name,bool remove=false);
 	bool FindHex(char const * const name,unsigned int & value,bool remove=false);

@@ -49,17 +49,17 @@ public:
 			data = NULL;
 		}
 	}
-	INLINE Bitu getFree(void) {
+	INLINE Bitu getFree(void) const {
 		return size-used;
 	}
-	bool isEmpty() {
+	bool isEmpty() const {
 		return used==0;
 	}
-	bool isFull() {
+	bool isFull() const {
 		return (size-used)==0;
 	}
 
-	INLINE Bitu getUsage(void) {
+	INLINE Bitu getUsage(void) const {
 		return used;
 	}
 	void setSize(Bitu newsize)
@@ -94,7 +94,7 @@ public:
 		if (pos>=size) pos-=size;
 		return data[where];
 	}
-	uint8_t getTop() {
+	uint8_t getTop() const {
 		Bitu where=pos+used;
 		if (where>=size) where-=size;
 		if(used>=size) {
@@ -104,7 +104,7 @@ public:
 		return data[where];
 	}
 
-	uint8_t probeByte() {
+	uint8_t probeByte() const {
 		return data[pos];
 	}
 private:
