@@ -262,6 +262,7 @@ void                TANDYSOUND_Init(Section*);
 void                DISNEY_Init(Section*);
 void                PS1SOUND_Init(Section*);
 void                INNOVA_Init(Section*);
+void                IMFC_Init(Section*);
 void                SERIAL_Init(Section*);
 void                DONGLE_Init(Section*);
 #if C_IPX
@@ -1382,7 +1383,7 @@ void DOSBOX_SetupConfigSections(void) {
         0 };
 
     const char* backendopts[] = {
-        "pcap", "slirp", "auto", "none",
+        "pcap", "slirp", "nothing", "auto", "none",
         0 };
 
     const char* workdiropts[] = {
@@ -3139,7 +3140,7 @@ void DOSBOX_SetupConfigSections(void) {
                       "See the README/Manual for more details.");
     Pstring->SetBasic(true);
 
-    Pint = secprop->Add_int("samplerate",Property::Changeable::WhenIdle,44100);
+    Pint = secprop->Add_int("samplerate",Property::Changeable::WhenIdle,48000);
     Pint->Set_values(rates);
     Pint->Set_help("Sample rate for MIDI synthesizer, if applicable.");
     Pint->SetBasic(true);
@@ -3488,7 +3489,7 @@ void DOSBOX_SetupConfigSections(void) {
 		"'nuked' is the most accurate (but the most CPU-intensive). See oplrate as well.");
     Pstring->SetBasic(true);
 
-    Pint = secprop->Add_int("oplrate",Property::Changeable::WhenIdle,44100);
+    Pint = secprop->Add_int("oplrate",Property::Changeable::WhenIdle,48000);
     Pint->Set_values(rates);
     Pint->Set_help("Sample rate of OPL music emulation. Use 49716 for highest quality (set the mixer rate accordingly).");
     Pint->SetBasic(true);
@@ -3652,7 +3653,7 @@ void DOSBOX_SetupConfigSections(void) {
             "accurate emulation attempts to better reflect how the actual hardware handles panning,\n"
             "while the old emulation uses a simpler idealistic mapping.");
 
-    Pint = secprop->Add_int("gusrate",Property::Changeable::WhenIdle,44100);
+    Pint = secprop->Add_int("gusrate",Property::Changeable::WhenIdle,48000);
     Pint->Set_values(rates);
     Pint->Set_help("Sample rate of Ultrasound emulation.");
     Pint->SetBasic(true);
@@ -3726,6 +3727,23 @@ void DOSBOX_SetupConfigSections(void) {
     Pint->Set_help("Set SID emulation quality level (0 to 3).");
     Pint->SetBasic(true);
 
+    secprop = control->AddSection_prop("imfc", &Null_Init, Property::Changeable::WhenIdle);
+    Pbool = secprop->Add_bool("imfc", Property::Changeable::WhenIdle, false);
+    Pbool->Set_help("Enable the IBM Music Feature Card (disabled by default).");
+    Phex = secprop->Add_hex("imfc_base", Property::Changeable::WhenIdle, 0x2A20);
+    const char* const bases[] = { "2A20", "2A30", nullptr };
+    Phex->Set_values(bases);
+    Phex->Set_help("The IO base address of the IBM Music Feature Card (2A20 by default).");
+    Pint = secprop->Add_int("imfc_irq", Property::Changeable::WhenIdle, 3);
+    const char* const irqs[] = { "2", "3", "4", "5", "6", "7", nullptr };
+    Pint->Set_values(irqs);
+    Pint->Set_help("The IRQ number of the IBM Music Feature Card (3 by default).");
+    Pstring = secprop->Add_string("imfc_filter", Property::Changeable::WhenIdle, "on");
+    Pstring->Set_help(
+        "Filter for the IBM Music Feature Card output:\n"
+        "  on:        Filter the output (default).\n"
+        "  off:       Don't filter the output.");
+
     secprop = control->AddSection_prop("speaker",&Null_Init,true);//done
     Pbool = secprop->Add_bool("pcspeaker",Property::Changeable::WhenIdle,true);
     Pbool->Set_help("Enable PC-Speaker emulation.");
@@ -3758,7 +3776,7 @@ void DOSBOX_SetupConfigSections(void) {
     Pstring->Set_help("Enable Tandy Sound System emulation. For 'auto', emulation is present only if machine is set to 'tandy'.");
     Pstring->SetBasic(true);
 
-    Pint = secprop->Add_int("tandyrate",Property::Changeable::WhenIdle,44100);
+    Pint = secprop->Add_int("tandyrate",Property::Changeable::WhenIdle,48000);
     Pint->Set_values(rates);
     Pint->Set_help("Sample rate of the Tandy 3-Voice generation.");
     Pint->SetBasic(true);
@@ -4603,11 +4621,12 @@ void DOSBOX_SetupConfigSections(void) {
     Pint->Set_help("The interrupt it uses. Note serial2 uses IRQ3 as default.");
     Pint->SetBasic(true);
 
-    Pstring = secprop->Add_string("macaddr", Property::Changeable::WhenIdle,"AC:DE:48:88:99:AA");
+    Pstring = secprop->Add_string("macaddr", Property::Changeable::WhenIdle,"random");
     Pstring->Set_help("The MAC address the emulator will use for its network adapter.\n"
         "If you have multiple DOSBox-Xes running on the same network,\n"
         "this has to be changed for each. AC:DE:48 is an address range reserved for\n"
-        "private use, so modify the last three number blocks, e.g. AC:DE:48:88:99:AB.");
+        "private use, so modify the last three number blocks, e.g. AC:DE:48:88:99:AB.\n"
+        "Default setting is 'random' which randomly choses a MAC address.");
     Pstring->SetBasic(true);
 
     Pstring = secprop->Add_string("backend", Property::Changeable::WhenIdle, "auto");
